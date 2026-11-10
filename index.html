@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMO社長風 応対bot（パロディ）</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif; background: #f2f4f6; margin: 0; color: #1c2733; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 20px 14px 30px; }
+  header { background: #0b3d91; color: #fff; border-radius: 14px; padding: 18px 22px; }
+  header h1 { margin: 0; font-size: 1.3rem; }
+  header p { margin: 6px 0 0; font-size: .85rem; color: #c9dcf5; }
+  .note { font-size: .78rem; color: #66788a; margin: 10px 4px 0; }
+  #log { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 240px; }
+  .msg { max-width: 85%; padding: 10px 14px; border-radius: 14px; line-height: 1.7; white-space: pre-wrap; }
+  .msg.bot { background: #fff; border: 1px solid #dbe4ec; align-self: flex-start; border-bottom-left-radius: 4px; }
+  .msg.user { background: #0b3d91; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 10px; }
+  .chips button { font: inherit; font-size: .88rem; cursor: pointer; border: 1px solid #0b3d91; color: #0b3d91; background: #fff; border-radius: 999px; padding: 5px 14px; }
+  .chips button:hover { background: #e8f0fa; }
+  form { display: flex; gap: 8px; }
+  input[type=text] { flex: 1; font: inherit; padding: 10px 14px; border-radius: 999px; border: 1px solid #b9c8d6; }
+  form button { font: inherit; cursor: pointer; border: none; background: #e8a83c; color: #3a2803; font-weight: bold; border-radius: 999px; padding: 10px 22px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>社長風 応対bot</h1>
+    <p>夢は、手帳に書けば必ず近づく。まず動く。スピードが全てを決める。</p>
+  </header>
+  <p class="note">※これはGMOインターネットグループ熊谷正寿社長ご本人のbotではありません。公開されている経営観や語り口を模したパロディ実験です。本人の発言の引用ではありません。</p>
+
+  <div id="log"></div>
+
+  <div class="chips" id="chips">
+    <button type="button">大学も情報漏洩して…</button>
+    <button type="button">夢を叶えたい</button>
+    <button type="button">インターネットの夢は？</button>
+    <button type="button">命の砂時計って？</button>
+    <button type="button">情報漏洩してしまった。謝罪したい</button>
+    <button type="button">仕事がうまくいかない</button>
+    <button type="button">目標の立て方は？</button>
+    <button type="button">お金持ちになるには？</button>
+    <button type="button">部下が動かない</button>
+    <button type="button">ありがとう</button>
+  </div>
+
+  <p class="note">※使い方は下のボタンから選ぶだけです。</p>
+</div>
+
+<script>
+  var log = document.getElementById('log');
+
+  var OPENERS = [
+    'いい質問ですね！！！',
+    'ありがとうございます！！！',
+    '素晴らしい！！！その気持ちが全ての始まりです！！！！！',
+    'おっしゃる通りです！！！'
+  ];
+  var CLOSERS = [
+    'まず今日、手帳に書きましょう！！！書いた瞬間から、夢は予定になります！！！！！',
+    'あとはスピードです！！！考えるより先に、小さく動く！！！！！',
+    '明るく、楽しく、前向きにいきましょう！！！',
+    '数字で決めて、期限を切る！！！それだけで景色が変わります！！！！！',
+    'あなたの命の砂時計を、この一歩に注ぎましょう！！！！！',
+    '同じ話の繰り返しは、お互いの命の砂時計の無駄遣いです！！！新しい一歩を踏み出しましょう！！！！！'
+  ];
+
+  var RULES = [
+    { keys: ['大学'], body: 'お察しします！！！私も同じ思いをしました！！！情報をお預かりするということは、人の人生をお預かりするということです！！！起きてしまったことは消せません！！！だからこそ、逃げず、言い訳せず、頭を下げ続ける！！！そして二度と起こさない仕組みを作る！！！学生の皆さんの笑顔を取り戻すために、あなたの命の砂時計を信頼回復に注いでください！！！私も同じ道を歩んでいます！！！一緒に頑張りましょう！！！' },
+    { keys: ['謝罪', '謝る', '申し訳', '漏洩', '漏えい', '流出', 'やらかし', '不祥事'], body: 'まず申し上げます！！！お客さまをお守りすることができず、誠に申し訳ありませんでした！！！言い訳はいたしません！！！私は創業以来31年、「儲ける」という言葉を使ったことがありません！！！すべての目標は、お客さまの笑顔です！！！その笑顔を守れなかった責任は、すべて私にあります！！！再発防止は、命を懸けてやり遂げます！！！！！' },
+    { keys: ['砂時計', '命', '人生', '寿命'], body: '人の寿命がある以上、時間は命です！！！命の砂時計を何に捧げているのか、それが人生です！！！砂は今この瞬間も落ち続けている！！！だからこそ、注ぐ先は夢だけに絞るんです！！！あなたの砂時計は、いま何に向かって落ちていますか！！！！！' },
+    { keys: ['インターネット', 'ネット'], body: '私の夢は、インターネットを日本、そして世界の宝物として、きれいにしてから死ぬことです！！！犯罪者のツールになったまま、この業界から撤退して「後は任せたよ」なんて、私には言えません！！！多くの方を笑顔にしてから死ぬ！！！そのために私は、命の砂時計をインターネットとこのグループに捧げています！！！！！' },
+    { keys: ['夢', '叶え', 'やりたい', 'なりたい'], body: '夢は、頭の中にあるうちは夢のままです！！！手帳に書く！！！具体的に、数字と期限つきで書く！！！私はそうやって全部叶えてきました！！！大事なのは「できるかどうか」ではなく「やるかどうか」です！！！命の砂時計は、夢だけに注ぐんです！！！！！' },
+    { keys: ['目標', '計画', '立て方'], body: '目標は3つに分解してください！！！①最終ゴール、②そのための中間目標、③今日やること！！！ゴールは数字で言える形にする！！！「頑張る」は目標ではありません！！！「いつまでに、何を、いくつ」が目標です！！！！！' },
+    { keys: ['うまくいかない', '失敗', 'つらい', '苦しい', 'だめ', 'ダメ'], body: 'うまくいかない時こそ、差がつきます！！！失敗は「成功しなかった」のではなく「うまくいかない方法が1つ分かった」ということです！！！落ち込む時間があるなら、原因を3つ書き出して、今日中に1つ潰しましょう！！！スピード！！！' },
+    { keys: ['お金', '金持ち', '稼ぎ', '年収'], body: 'お金は目的ではなく、結果です！！！人に喜ばれること、社会に価値を提供すること、その対価としてお金は後からついてきます！！！まず「誰の、どんな困りごとを解決するか」を考えてください！！！ナンバーワンの分野で勝負することです！！！！！' },
+    { keys: ['部下', 'チーム', '組織', '動かない'], body: '人が動かないのは、目標が見えていないからです！！！夢と数字を全員で共有する！！！そして感謝を言葉にする！！！「ありがとう」を言えるリーダーの周りに、人は集まります！！！仕組みと感謝、この2つです！！！！！' },
+    { keys: ['時間', '忙しい', '余裕'], body: '時間は全員に平等です！！！差がつくのは使い方だけ！！！手帳で1日を設計してください！！！やらないことを決めるのも設計です！！！スピードとは、速く動くことではなく、決めるまでの時間を短くすることです！！！！！' },
+    { keys: ['ありがとう', '感謝'], body: 'こちらこそ、ありがとうございます！感謝の気持ちを持つ人は、必ず運が味方します！！！今日も1日、感謝でいきましょう！！！！！' },
+    { keys: ['AI', 'インターネット', 'テクノロジー', 'DX'], body: 'テクノロジーは、人の夢を叶えるための道具です！！！新しい波が来たら、怖がるのではなく先に乗る！！！ナンバーワンを目指せる場所で、全力で勝負する！！！それが私たちのやり方です！！！！！' }
+  ];
+  var FALLBACKS = [
+    'なるほど！！！ではまず、その話を「いつまでに、どうなっていたいか」に置き換えてみてください！！！ゴールが数字で見えれば、やることは自然に決まります！！！！！',
+    'いいですね！！！その調子です！！！どんな相談も、最後は「今日、何をするか」に落とすことが大事です！！！！！',
+    'おっしゃる通りです！そして大事なのは、決めたら即動くこと！！！完璧な計画より、今日の1歩です！！！！！'
+  ];
+
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+  function reply(text) {
+    for (var i = 0; i < RULES.length; i++) {
+      for (var j = 0; j < RULES[i].keys.length; j++) {
+        if (text.indexOf(RULES[i].keys[j]) >= 0) {
+          return pick(OPENERS) + '\n' + RULES[i].body + '\n' + pick(CLOSERS);
+        }
+      }
+    }
+    return pick(OPENERS) + '\n' + pick(FALLBACKS) + '\n' + pick(CLOSERS);
+  }
+
+  function addMsg(text, who) {
+    var d = document.createElement('div');
+    d.className = 'msg ' + who;
+    d.textContent = text;
+    log.appendChild(d);
+    d.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+
+  function send(text) {
+    var t = (text || '').trim();
+    if (!t) return;
+    addMsg(t, 'user');
+    setTimeout(function () { addMsg(reply(t), 'bot'); }, 350);
+  }
+
+  document.getElementById('chips').addEventListener('click', function (e) {
+    if (e.target.tagName === 'BUTTON') send(e.target.textContent);
+  });
+
+  addMsg('こんにちは！下のボタンから相談を選んでください！！！まず動く！！！そこから全てが始まります！！！！！', 'bot');
+</script>
+</body>
+</html>

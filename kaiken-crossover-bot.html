@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会見クロスオーバーbot（パロディ）</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif; background: #eef0f2; margin: 0; color: #1c2733; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 20px 14px 30px; }
+  header { background: linear-gradient(90deg, #4a4238 0%, #5a5348 45%, #0b3d91 100%); color: #fff; border-radius: 14px; padding: 18px 22px; }
+  header h1 { margin: 0; font-size: 1.3rem; }
+  header p { margin: 6px 0 0; font-size: .85rem; color: #e3e9f2; }
+  .note { font-size: .78rem; color: #66788a; margin: 10px 4px 0; }
+  .panel { background: #fff; border: 1px solid #dbe4ec; border-radius: 14px; padding: 16px 20px; margin-top: 14px; }
+  .slider-labels { display: flex; justify-content: space-between; font-weight: bold; font-size: .95rem; }
+  .slider-labels .nono { color: #6b5d43; }
+  .slider-labels .kuma { color: #0b3d91; }
+  input[type=range] { width: 100%; margin: 10px 0 6px; accent-color: #33566e; }
+  #blendText { font-size: 1.05rem; font-weight: bold; text-align: center; margin: 4px 0 2px; }
+  #bandText { font-size: .88rem; color: #47606f; text-align: center; margin: 0; }
+  #log { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 220px; }
+  .msg { max-width: 85%; padding: 10px 14px; border-radius: 14px; line-height: 1.7; white-space: pre-wrap; }
+  .msg.bot { background: #fff; border: 1px solid #dbe4ec; align-self: flex-start; border-bottom-left-radius: 4px; }
+  .msg.user { background: #33566e; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 10px; }
+  .chips button { font: inherit; font-size: .88rem; cursor: pointer; border: 1px solid #33566e; color: #33566e; background: #fff; border-radius: 999px; padding: 5px 14px; }
+  .chips button:hover { background: #e8f0fa; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>会見クロスオーバーbot</h1>
+    <p>スライダーで「号泣」と「理念」の配合を変えられます。</p>
+  </header>
+  <p class="note">※熊谷正寿社長・野々村竜太郎元議員ご本人のbotではありません。両名の記者会見の様式を模したパロディ実験です。本人の発言の正確な再現ではありません。</p>
+
+  <div class="panel">
+    <div class="slider-labels">
+      <span class="nono">野々村議員（号泣）</span>
+      <span class="kuma">（理念）熊谷社長</span>
+    </div>
+    <input type="range" id="blend" min="0" max="100" value="50">
+    <p id="blendText"></p>
+    <p id="bandText"></p>
+  </div>
+
+  <div id="log"></div>
+
+  <div class="chips" id="chips">
+    <button type="button">情報漏洩してしまった。謝罪したい</button>
+    <button type="button">夢を語ってください</button>
+    <button type="button">時間についての考えは？</button>
+    <button type="button">政務活動費の使い道は？</button>
+    <button type="button">この日本をどうしたいですか？</button>
+    <button type="button">お客さま・有権者に一言お願いします</button>
+    <button type="button">身代金80億円を要求されたそうですが？</button>
+    <button type="button">城崎温泉に106回も行ったのですか？</button>
+    <button type="button">195回の出張で何をしていたのですか？</button>
+    <button type="button">セキュリティの専門家の警告が届かなかったそうですが？</button>
+    <button type="button">被害を受けた顧客への補償は？</button>
+    <button type="button">最終的に有罪判決が出たことについては？</button>
+  </div>
+
+  <p class="note">※事実メモ（報道に基づく背景）：野々村元議員＝2013年度に日帰り出張195回・切符代301万5,160円（城崎温泉106回・佐用62回・博多16回・東京11回）、領収書なし・活動内容の記載なし、その後約913万円の詐取で2016年に有罪判決（懲役3年・執行猶予4年）。熊谷社長＝2026年11月2日の会見で、お名前.com デスクトップクラウドへの不正アクセス（最大2万6,739件）について、80億円の身代金要求の拒否、FX不正操作による顧客損害の全額補償、専門家からの警告が生かせなかった統治の不備を表明。「31年間『儲ける』と言ったことがない」も同会見での発言。</p>
+
+  <p class="note">※使い方は、スライダーを動かしてから、質問ボタンを押すだけです。</p>
+</div>
+
+<script>
+  var log = document.getElementById('log');
+  var blend = document.getElementById('blend');
+  var blendText = document.getElementById('blendText');
+  var bandText = document.getElementById('bandText');
+
+  var QUESTIONS = {
+    '情報漏洩してしまった。謝罪したい': {
+      k: 'まず申し上げます！！！　お客さまをお守りすることができず…誠に申し訳ありませんでした！！！　言い訳はいたしません！！！　私は創業以来31年間、一度たりとも「儲ける」という言葉を使ったことがありません！！！　すべての目標は、お客さまの笑顔です！！！　再発防止は、命を懸けてやり遂げます！！！',
+      n: '申し訳……申し訳ありません…！！！　私はですね、情報を守るということが、どれほど大事か、分かっていたはずなのに…！！！　うう…！！！'
+    },
+    '夢を語ってください': {
+      k: '私の夢は…！！！　インターネットを日本、そして世界の宝物として、きれいにしてから死ぬことです！！！　犯罪者のツールになったまま、この業界から撤退はできません！！！　命の砂時計は、夢だけに注ぐんです！！！',
+      n: '私の夢は……この日本をォォ…！！！　変えたい…！！！　その一心で、ずっと、やってきたんです…！！！'
+    },
+    '時間についての考えは？': {
+      k: '人の寿命がある以上…時間は命です！！！　命の砂時計を何に捧げているのか、それが人生です！！！　だから同じ説明の繰り返しで、皆さまの砂時計を無駄遣いするわけにはいきません！！！',
+      n: '時間は……私は時間を無駄にしたくなくて……日帰りで、何度も、何度も通って……ううう…！！！'
+    },
+    '政務活動費の使い道は？': {
+      k: '使い道は、すべて数字で説明できる形にすべきです！！！　記録し、公開し、第三者が検証できるようにする！！！　透明性こそが信頼の土台です！！！',
+      n: '使い道については、すべて、すべて正当な……うう……一生懸命やってきたんです…！！！　本当に…！！！'
+    },
+    'この日本をどうしたいですか？': {
+      k: 'インターネットで多くの方を笑顔にして、日本を元気にしたい！！！　それが私の使命であり、命の砂時計を捧げる場所です！！！',
+      n: 'この日本をォォ…！！！　変えたいんです…！！！　その思いだけは……本当なんです…！！！'
+    },
+    'お客さま・有権者に一言お願いします': {
+      k: 'すべての目標は、お客さまの笑顔です！！！　感謝の気持ちを忘れず、明るく、楽しく、前向きに進んでまいります！！！',
+      n: '期待してくださった皆さまの思いを……私は……うわあああぁぁぁ…！！！'
+    },
+    '身代金80億円を要求されたそうですが？': {
+      k: '犯人から80億円の身代金を要求されました…！！！　支払いは、即座に拒絶しました！！！　屈すれば、次の被害者を生みます！！！　犯罪者に渡すお金があるなら、まず、お客さまの補償に使います！！！　警察とも連携し、追跡に協力しています！！！',
+      n: '身代金…！！！？　私はですね、切符代301万5,160円の件についてご説明に来たのであって……うう……そ、その件は…！！！'
+    },
+    '城崎温泉に106回も行ったのですか？': {
+      k: '数字でお答えしましょう！！！　106回という頻度が本当に仕事なら、記録と成果で証明する責任があります！！！　説明できない支出は、人の信頼を裏切ります！！！　私なら、全件の記録を開示します！！！',
+      n: '城崎温泉には、意見交換や政策の教示を受けるために訪問したのであって、温泉に入るためでは……天に誓って、嘘偽りは……ううう…！！！'
+    },
+    '195回の出張で何をしていたのですか？': {
+      k: '何をしていたかは、すべて記録に残し、開示するのが説明責任です！！！　195回なら195回分、相手と内容を示すべきです！！！　それができないなら、支出そのものを見直すべきです！！！',
+      n: '面会相手については、公表しないと相手と約束しておりまして……精力的な活動が常識とかけ離れているとのご指摘ならば、大人として折り合いを付けざるを得ないと……うう…！！！'
+    },
+    'セキュリティの専門家の警告が届かなかったそうですが？': {
+      k: '率直に認めます！！！　グループ内のセキュリティの専門家が、以前から問題を指摘していました…！！！　しかし、その声が私に届かず、運営に生かすことができませんでした！！！　これは統治の失敗です！！！　私の責任です！！！',
+      n: '警告は……私のところにも、届いていたのかも、しれませんが……確認する間もなく、活動に……うう…！！！'
+    },
+    '被害を受けた顧客への補償は？': {
+      k: 'FX自動売買の不正操作によって損害を受けたお客さまには、全額を補償いたします！！！　お客さまの資産をお守りできなかった以上、それが最低限の責任です！！！',
+      n: 'ほ、補償……返納も検討すると、申し上げた通りで……事務局と相談のうえ……ううう…！！！'
+    },
+    '最終的に有罪判決が出たことについては？': {
+      k: '判決は、事実として重く受け止めるしかありません！！！　信頼は、言葉ではなく、その後の行動の積み重ねでしか回復できません！！！',
+      n: '判決については……約913万円という金額を聞くたびに……私は……（言葉にならない）…！！！'
+    }
+  };
+
+  var WAIL_LONG = [
+    'うわあああぁぁぁ……ん！！！',
+    'うう……うわああぁぁん！！！',
+    '（机を叩く）うわあああぁぁぁ！！！'
+  ];
+  var WAIL_SHORT = [
+    'うう……（声が震える）…！！！',
+    '（ハンカチで顔を覆う）……すみません…！！！'
+  ];
+  var MID_CRY = [
+    'あなたには分からないでしょうねぇ…！！！　この思いは…！！！',
+    '一生懸命やってきたんです…！！！　本当に、一生懸命…！！！'
+  ];
+  var N_END = [
+    '……申し訳ありません…！！！　会見を続けます。次の質問をどうぞ…！！！',
+    '（水を飲む）……失礼しました…！！！　続けてください…！！！'
+  ];
+  var K_END = [
+    '以上です！！！　ご理解いただけますと幸いです！！！',
+    '次のご質問をどうぞ！！！　皆さまの命の砂時計を、大切に使わせていただきます！！！'
+  ];
+  var TEAR = '（目に涙を浮かべながらも、言葉は最後まで崩れない…！！！）';
+
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function firstSentence(s) {
+    var a = s.indexOf('。');
+    var b = s.indexOf('！！！');
+    if (a < 0 && b < 0) return s;
+    if (b < 0 || (a >= 0 && a < b)) return s.slice(0, a + 1);
+    return s.slice(0, b + 3);
+  }
+
+  function reply(q, v) {
+    var pair = QUESTIONS[q];
+    if (!pair) return 'そのご質問には、スライダーを動かしてからお答えします。';
+    if (v <= 25) {
+      return pair.n + '\n' + pick(MID_CRY) + '\n' + pick(WAIL_LONG) + '\n' + pick(N_END);
+    }
+    if (v <= 50) {
+      return firstSentence(pair.k) + '\n（と、ここで声が詰まる…！！！）\n' + pair.n + '\n' + pick(WAIL_LONG) + '\n' + pick(N_END);
+    }
+    if (v <= 75) {
+      return pair.k + '\n' + pick(WAIL_SHORT) + '\n（深呼吸して、立て直す！！！）\n' + pick(K_END);
+    }
+    var head = Math.random() < 0.35 ? TEAR + '\n' : '';
+    return head + pair.k + '\n' + pick(K_END);
+  }
+
+  function bandOf(v) {
+    if (v <= 25) return 'ほぼ野々村。説明は崩壊し、号泣が中心です。';
+    if (v <= 50) return '野々村寄り。理念を語り始めても、途中で崩れます。';
+    if (v <= 75) return '熊谷寄り。一瞬声が震えても、立て直して理念で締めます。';
+    return 'ほぼ熊谷。涙は浮かべても、言葉は最後まで崩れません。';
+  }
+
+  function renderBlend() {
+    var v = parseInt(blend.value, 10);
+    blendText.textContent = '熊谷 ' + v + '% ／ 野々村 ' + (100 - v) + '%';
+    bandText.textContent = bandOf(v);
+  }
+  blend.addEventListener('input', renderBlend);
+  renderBlend();
+
+  function addMsg(text, who) {
+    var d = document.createElement('div');
+    d.className = 'msg ' + who;
+    d.textContent = text;
+    log.appendChild(d);
+    d.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+
+  document.getElementById('chips').addEventListener('click', function (e) {
+    if (e.target.tagName !== 'BUTTON') return;
+    var q = e.target.textContent;
+    addMsg(q, 'user');
+    var v = parseInt(blend.value, 10);
+    setTimeout(function () { addMsg(reply(q, v), 'bot'); }, 500);
+  });
+
+  addMsg('本日はお集まりいただき、ありがとうございます！！！　まずスライダーで配合を決めてから、ご質問をどうぞ！！！', 'bot');
+</script>
+</body>
+</html>

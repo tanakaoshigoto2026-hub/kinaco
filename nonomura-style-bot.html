@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>号泣会見風 応対bot（パロディ）</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif; background: #f4f1ec; margin: 0; color: #26221c; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 20px 14px 30px; }
+  header { background: #4a4238; color: #fff; border-radius: 14px; padding: 18px 22px; }
+  header h1 { margin: 0; font-size: 1.3rem; }
+  header p { margin: 6px 0 0; font-size: .85rem; color: #ddd3c2; }
+  .note { font-size: .78rem; color: #7a7264; margin: 10px 4px 0; }
+  #log { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 240px; }
+  .msg { max-width: 85%; padding: 10px 14px; border-radius: 14px; line-height: 1.7; white-space: pre-wrap; }
+  .msg.bot { background: #fff; border: 1px solid #e2d9c8; align-self: flex-start; border-bottom-left-radius: 4px; }
+  .msg.user { background: #4a4238; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 10px; }
+  .chips button { font: inherit; font-size: .88rem; cursor: pointer; border: 1px solid #4a4238; color: #4a4238; background: #fff; border-radius: 999px; padding: 5px 14px; }
+  .chips button:hover { background: #efe9dd; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>号泣会見風 応対bot</h1>
+    <p>記者からの質問にお答えします。（※途中から感情が高ぶる場合があります）</p>
+  </header>
+  <p class="note">※これは野々村竜太郎元兵庫県議ご本人のbotではありません。2014年の釈明記者会見の様式を模したパロディ実験です。本人の発言の正確な再現ではありません。</p>
+
+  <div id="log"></div>
+
+  <div class="chips" id="chips">
+    <button type="button">政務活動費の使い道を説明してください</button>
+    <button type="button">日帰り出張は本当に行ったのですか？</button>
+    <button type="button">領収書はありますか？</button>
+    <button type="button">なぜ泣いているのですか？</button>
+    <button type="button">この日本をどうしたいのですか？</button>
+    <button type="button">辞職するつもりはありますか？</button>
+    <button type="button">有権者に一言お願いします</button>
+  </div>
+
+  <p class="note">※使い方は上のボタン（記者の質問）を押すだけです。</p>
+</div>
+
+<script>
+  var log = document.getElementById('log');
+
+  var WAIL = [
+    'うわあああぁぁぁ……ん！！！',
+    'うう……うわああぁぁん！！！',
+    '（机を叩く）うわあああぁぁぁ！！！',
+    'うわああああぁ……（言葉にならない）'
+  ];
+
+  var RULES = [
+    { keys: ['使い道', '政務活動費'], body: '（深く息を吸って）……申し上げます！！！私はですね、政務活動費の使い道については、すべて、すべて正当な……うう……！！！！！' },
+    { keys: ['出張', '行った'], body: '行きました！　確かに行きました！　日帰りで、城崎温泉に……いえ、温泉ではなく、調査のために……！！！その記録が曖昧だというご指摘は……うう……！！！！！' },
+    { keys: ['領収書'], body: '領収書は……領収書はですね、交通機関の性質上、発行されなかったものも……（声が震える）……ううう……！！！！！' },
+    { keys: ['なぜ泣', '泣いて'], body: '泣いているのでは……ありません……！！！ただ、思いが……思いが溢れて……うわあああぁぁぁ！！！' },
+    { keys: ['日本をどう', '日本'], body: '私は……私はですねッ！　この日本をォォ！　変えたい！　その一心で、一生懸命、本当に一生懸命、やっとるんです！　うわあああぁぁぁ！！！' },
+    { keys: ['辞職'], body: '辞職については……今は……お答えできる状況では……！！！ただ、私の思いは……うう……（言葉に詰まる）！！！！！' },
+    { keys: ['有権者', '一言'], body: '有権者の皆さまには……本当に、申し訳……（声にならない）！！！期待してくださった皆さまの思いを……うわあああぁぁぁ！！！' }
+  ];
+  var FALLBACK = 'そのご質問についてはですね、私なりに、一生懸命、説明を尽くしてきたつもりで……うう……！！！！！';
+
+  var MID = [
+    'あなたには分からないでしょうねぇ！　この思いは……！！！',
+    '一生懸命やってきたんです！　本当に、一生懸命……！！！',
+    '（ハンカチで顔を覆う）……すみません、少し……！！！！！',
+    '私の人生をかけて……政治をやってきたんです……！！！'
+  ];
+  var END = [
+    '……申し訳ありません！！！会見を続けます！！！次の質問をどうぞ！！！！！',
+    '（水を飲む）……失礼しました！！！続けてください！！！！！',
+    '……以上です！！！ご理解いただけると……信じています！！！！！'
+  ];
+
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+  function reply(text) {
+    var body = FALLBACK;
+    for (var i = 0; i < RULES.length; i++) {
+      for (var j = 0; j < RULES[i].keys.length; j++) {
+        if (text.indexOf(RULES[i].keys[j]) >= 0) { body = RULES[i].body; break; }
+      }
+      if (body !== FALLBACK) break;
+    }
+    var level = Math.random();
+    if (level < 0.45) {
+      return body + '\n' + pick(MID) + '\n' + pick(WAIL) + '\n' + pick(END);
+    } else if (level < 0.8) {
+      return body + '\n' + pick(WAIL) + '\n' + pick(END);
+    }
+    return body + '\n' + pick(END);
+  }
+
+  function addMsg(text, who) {
+    var d = document.createElement('div');
+    d.className = 'msg ' + who;
+    d.textContent = text;
+    log.appendChild(d);
+    d.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+
+  function send(text) {
+    addMsg(text, 'user');
+    setTimeout(function () { addMsg(reply(text), 'bot'); }, 500);
+  }
+
+  document.getElementById('chips').addEventListener('click', function (e) {
+    if (e.target.tagName === 'BUTTON') send(e.target.textContent);
+  });
+
+  addMsg('お忙しい中お集まりいただき、ありがとうございます！！！本日は、私の政務活動費の件について、ご説明させていただきます！！！ご質問をどうぞ！！！！！', 'bot');
+</script>
+</body>
+</html>
