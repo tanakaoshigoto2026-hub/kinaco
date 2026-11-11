@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI使い分け診断｜情報の4段階区分</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", sans-serif; background: #f2f4f8; color: #232946; min-height: 100vh; }
+  header { background: linear-gradient(135deg, #232946 0%, #3d5a80 60%, #2a9d8f 100%); color: #fff; padding: 28px 20px 22px; text-align: center; }
+  header h1 { font-size: 24px; letter-spacing: .04em; }
+  header p { font-size: 13px; opacity: .9; margin-top: 8px; line-height: 1.6; }
+  main { max-width: 640px; margin: 0 auto; padding: 20px 16px 40px; }
+  .dots { display: flex; gap: 8px; justify-content: center; margin: 4px 0 18px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #c9d2e0; }
+  .dot.on { background: #2a9d8f; }
+  .dot.warn { background: #d64545; }
+  .card { background: #fff; border-radius: 14px; padding: 22px 18px; box-shadow: 0 2px 10px rgba(35,41,70,.08); }
+  .qnum { font-size: 12px; color: #2a9d8f; font-weight: bold; letter-spacing: .1em; margin-bottom: 6px; }
+  .qnum.warn { color: #d64545; }
+  .qtitle { font-size: 19px; font-weight: bold; line-height: 1.5; margin-bottom: 6px; }
+  .qsub { font-size: 13px; color: #5a6a85; line-height: 1.7; margin-bottom: 16px; }
+  .opt { display: block; width: 100%; text-align: left; background: #eef3f9; border: 2px solid #d5dee9; border-radius: 12px; padding: 14px 14px; margin-bottom: 10px; font-size: 15px; cursor: pointer; line-height: 1.55; color: #232946; }
+  .opt:hover, .opt:active { border-color: #2a9d8f; background: #e6f5f2; }
+  .opt.danger:hover, .opt.danger:active { border-color: #d64545; background: #fbeaea; }
+  .opt b { display: block; font-size: 15px; margin-bottom: 2px; }
+  .opt span { font-size: 12.5px; color: #5a6a85; }
+  .backbtn { background: none; border: none; color: #3d5a80; font-size: 13px; cursor: pointer; margin-top: 6px; text-decoration: underline; }
+  .result-label { font-size: 12px; color: #2a9d8f; font-weight: bold; letter-spacing: .1em; }
+  .result-label.warn { color: #d64545; }
+  .result-place { font-size: 25px; font-weight: bold; line-height: 1.4; margin: 8px 0 12px; color: #232946; }
+  .result-place.warn { color: #b02a2a; }
+  .result-body { font-size: 14.5px; line-height: 1.85; margin-bottom: 14px; }
+  .note { background: #fdf6e3; border-left: 4px solid #e9c46a; border-radius: 6px; padding: 12px 14px; font-size: 13.5px; line-height: 1.75; margin-bottom: 16px; }
+  .note b { color: #8a6d1a; }
+  .note.warn { background: #fbeaea; border-left-color: #d64545; }
+  .note.warn b { color: #b02a2a; }
+  .path { font-size: 12.5px; color: #5a6a85; background: #eef3f9; border-radius: 8px; padding: 10px 12px; line-height: 1.8; margin-bottom: 16px; }
+  .again { display: block; width: 100%; background: #232946; color: #fff; border: none; border-radius: 12px; padding: 14px; font-size: 15px; cursor: pointer; }
+  footer { max-width: 640px; margin: 0 auto; padding: 0 16px 28px; font-size: 12px; color: #7a879c; line-height: 1.8; }
+  footer .motto { background: #fff; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; font-size: 13px; color: #3d5a80; box-shadow: 0 2px 8px rgba(35,41,70,.06); }
+  footer .motto b { color: #b02a2a; }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI使い分け診断</h1>
+  <p>ガイドラインの「情報の4段階区分」で置き場を決める。<br>迷ったら、厳しいほう（数字の大きい段階）を選ぶ。</p>
+</header>
+<main>
+  <div class="dots" id="dots"></div>
+  <div class="card" id="stage"></div>
+</main>
+<footer>
+  <div class="motto"><b>第4段階（機微情報・入試関係・研究関係）は、どの生成AIにも入れない。</b><br>第1段階＝生成AI全OK／第2・第3段階＝Copilotのみ／公式サービスはCopilotのみ、がガイドライン（下案）の骨格です。</div>
+  <p>これは「生成AI利用ガイドライン（下案）」の情報区分をアプリ化した、個人用の整理道具です。正式な規程ではなく、職場の正式なルールが常に優先します。私用の分岐はガイドラインの対象外で、使い分け（生活の継続ものはブラウザ操作できるエージェント型AI、深い思考はClaude）を置いています。</p>
+</footer>
+<script>
+var QUESTIONS = {
+  scene: {
+    title: "場面はどっち？",
+    sub: "仕事の場合はガイドライン（下案）の4段階区分で判定します。私用はガイドライン対象外で、これまでの使い分けで判定します。",
+    options: [
+      { v: "work", b: "仕事", s: "職場の業務・データが絡む（ガイドラインで判定）" },
+      { v: "private", b: "私用", s: "自分のこと、家族のこと、趣味や作品づくり" }
+    ]
+  },
+  tier: {
+    title: "その情報は、どの段階に近い？",
+    sub: "ガイドラインの情報区分です。具体例に一番近いものを選んでください。迷ったら厳しいほう（数字の大きい段階）を選ぶのがルールです。",
+    options: [
+      { v: "t1", b: "第1段階 一般情報", s: "公開済み・公開前提。公開シラバス、イベント情報、規程類、一般的な知識など" },
+      { v: "t2", b: "第2段階 業務情報", s: "業務マニュアル、内部手順書、未公表の会議資料、システム構成情報など、非公開の業務知識" },
+      { v: "t3", b: "第3段階 個人情報（機微情報を除く）", s: "氏名、学籍番号、連絡先、履修・成績情報、問い合わせ対応記録など" },
+      { v: "t4", b: "第4段階 取扱禁止情報", s: "機微情報、入試関係（未公表の問題・合否）、研究関係（未発表のデータ・草稿）など", danger: true }
+    ]
+  },
+  data: {
+    title: "入れるデータの重さは？",
+    sub: "漏れたときの「取り返しのつかなさ」で測ります。個人情報や実データは一番重い。",
+    options: [
+      { v: "heavy", b: "重い：個人情報・実データそのもの", s: "家族や家計の情報、実際の記録など" },
+      { v: "mid", b: "中くらい：作業の中身", s: "創作や作業の材料で、個人を特定する情報は含まれないもの" },
+      { v: "light", b: "軽い：公開情報・一般論で済む", s: "公開資料、一般的な知識、公開前提の文章など" }
+    ]
+  },
+  act: {
+    title: "AIに触らせる範囲は？",
+    sub: "「読むだけ」「書く」「操作する」で、線引きの重さが一段ずつ上がります。",
+    options: [
+      { v: "read", b: "読んでほしい", s: "説明、要約、読み解き、調べ物" },
+      { v: "write", b: "書いてほしい", s: "文章、コード、企画の下書きや推敲" },
+      { v: "operate", b: "操作してほしい", s: "ブラウザやシステムを実際に動かす、実行や手続き" }
+    ]
+  }
+};
+
+var BANNED = {
+  place: "生成AIには入れない（第4段階：取扱禁止情報）",
+  body: "機微情報・入試関係・研究関係にあたる情報は、組織公式のCopilotを含め、いかなる生成AIにも入力してはなりません。一般化・匿名化・マスキングを施した場合でも同様です。扱いは人間の手と、従来の業務システムの中で完結させます。",
+  note: "情報の一部に第4段階の内容が含まれれば、全体が第4段階です。迷ったら上位段階として扱うのがガイドラインの判定ルールです。"
+};
+
+var RESULTS = {
+  "w-t1-read": {
+    place: "すべての生成AI 可",
+    body: "第1段階 一般情報です。既に公開されている情報・公開を前提とする情報なので、公式サービス（Copilot）でも個人契約サービスでも利用できます。一般論の調べ物や要約は、速さや出典の追いやすさで道具を選んで構いません。",
+    note: "質問文や検索語に第2段階以上の情報が混ざらないこと。公開情報だけで質問を組み立てるのがコツです。"
+  },
+  "w-t1-write": {
+    place: "すべての生成AI 可（公開前提の文章）",
+    body: "第1段階 一般情報を材料にする、公開前提の文章の下書き・推敲は、どの生成AIでも利用できます。文章の得意な個人契約サービスを使う判断も成り立ちます。",
+    note: "対外公表物に使う場合は、ガイドラインの共通ルールで複数名による確認を経て発信を。内部事情が文章ににじんでいないかも確認します。"
+  },
+  "w-t1-operate": {
+    place: "人間が実行する（情報区分とは別の線）",
+    body: "第1段階の情報そのものは全AI可です。ただし、職場のシステムやアカウントをAIに操作させる行為は情報区分とは別の問題で、公式ラインが未整備の現時点では実行は人間が行います。AIの役目は手順の相談や下書きまで。",
+    note: "操作代行系（Edgeの Browse with Copilot＝旧Copilot Actionsなど）は提供範囲が限定的です。公式に認められるまでは「人が触る」が正解です。"
+  },
+  "w-t2-read": {
+    place: "Copilotのみ（公式サービス）",
+    body: "第2段階 業務情報です。業務マニュアルや内部手順書など非公開の業務知識は、本学が契約したCopilotでのみ扱います。個人契約サービスへの入力は不可です。",
+    note: "業務知識は「一般化したつもり」でも第2段階のままです。公開済みの部分と混ざっている場合は、全体を第2段階として扱います。"
+  },
+  "w-t2-write": {
+    place: "Copilotのみ（公式サービス）",
+    body: "第2段階 業務情報を材料にする下書き・推敲も、Copilotの中で完結させます。骨格だけを個人契約サービスで磨く二段構えは、骨格自体に業務知識がにじむため、この段階では採りません。",
+    note: "迷ったら公式だけで完結させるほうが安全です。公式サービスの追加・変更があれば、この判定はガイドラインの表ごと見直します。"
+  },
+  "w-t2-operate": {
+    place: "人間が実行する（支援はCopilot）",
+    body: "操作の実行は人間です。ただし、EdgeのサイドバーCopilotに画面の内容を聞きながら進める「支援型」は、入力される情報が第2段階でもCopilotの範囲内なので可能です。手順書や確認リストづくりもCopilotで。",
+    note: "APEXのようなブラウザ業務では、この「画面は人間、相談はCopilot」の形が現実解です。"
+  },
+  "w-t3-read": {
+    place: "Copilotのみ（条件付き）",
+    body: "第3段階 個人情報（機微情報を除く）です。扱えるのは公式のCopilotのみで、入力は業務上必要な最小限の範囲にとどめます。氏名等の直接の識別情報が作業上不要なら、除去・置換してから入力します。",
+    note: "属性情報の組合せで個人が特定され得ることにも注意。機微情報（健康・信条・相談記録等）が混ざる場合は第4段階に上がります。"
+  },
+  "w-t3-write": {
+    place: "Copilotのみ（条件付き）",
+    body: "第3段階 個人情報を含む文書の生成・推敲も、公式のCopilotの中で行います。読み解きと同じく、必要最小限の入力とマスキングが条件です。",
+    note: "最終判断と送信は人間。AIの文章をそのまま出さず、事実確認を挟むのがガイドラインの共通ルールです。"
+  },
+  "w-t3-operate": {
+    place: "人間が実行する（AIは手順の下書きまで）",
+    body: "個人情報に触れる本番操作をAIに代行させることは、公式・非公式を問わず現行ラインでは認められません。手順書や確認リストの下書きまではCopilotで作れます（下書き自体に個人情報を含める場合も同様にCopilotの中で）。",
+    note: "誤って入力すべきでない情報を入れてしまった場合は、速やかに情報システム担当部署へ報告するのがガイドラインのルールです。"
+  },
+  "private-heavy-read": {
+    place: "ブラウザ操作できるAIエージェント（Muse／Claude in Chrome等）",
+    body: "家族や家計のような重い私用データは、生活の文脈ごと預けられる置き場が向いています。予定、買い物、家族の記録が一本につながり、必要ならブラウザ操作で下調べや手続きの途中まで進められる、エージェント型AIの強みが出るところです。",
+    note: "家族の情報は必要最小限で。重いデータほど、連携先と保存先を自分で把握できるエージェントに限ります。"
+  },
+  "private-heavy-write": {
+    place: "エージェント型AI（記録・清書）／深い思考はClaudeへ",
+    body: "日々の記録やメモの清書は、文脈が残るエージェント型AIに。人生や仕事の深い壁打ちはClaudeに渡して、結論だけをエージェント側に持ち帰る分担が、運用として一番しっくりくる形です。",
+    note: "考えた過程を全部移そうとせず「結論の一行」を持ち帰るのが、AIの住所録を散らかさないコツです。"
+  },
+  "private-heavy-operate": {
+    place: "ブラウザ操作できるAIエージェント（承認を挟む代行）",
+    body: "私用の手続きやブラウザ作業の代行は、ブラウザ操作できるAIエージェントの本領です。候補は Muse、Claude in Chrome、ChatGPTのエージェント機能、Perplexity Comet、Geminiの Auto Browse、Edgeの Browse with Copilot（提供範囲は限定的）など。送信や購入のような大事な操作では、必ず承認を挟む設計のものを選びます。",
+    note: "支払いと送信の最終確認は人間。ここだけは自動化しないのが、安心して任せるための条件です。"
+  },
+  "private-mid-read": {
+    place: "エージェント型AI／速さが要るならGemini",
+    body: "私用の調べ物や読み解きは、文脈が残るエージェント型AIが基本。単発で速く答えが欲しいときはGeminiの出番です。",
+    note: "一度きりの質問はどこで聞いても大差なし。継続する話題は、記録が残る置き場に寄せるのがあとで効きます。"
+  },
+  "private-mid-write": {
+    place: "Claude（一番の書き手）／保管と公開はエージェント型AI",
+    body: "文章やコードを書く作業はClaudeの得意分野。作ったものを単一HTMLにしてGitHub Pagesで公開する、みたいな「置く・配る」の段取りは、ブラウザ操作やファイル操作ができるエージェント型AIの役目です。自宅PCならGitHub Copilotも選択肢に入ります。",
+    note: "書く場所と置く場所を分けると、作品が散らからずに済みます。「作ったら置き場に運ぶ」を習慣に。"
+  },
+  "private-mid-operate": {
+    place: "ブラウザ操作できるAIエージェント（連携の範囲で代行）",
+    body: "私用のブラウザ作業やアカウント操作の代行は、エージェント型AIの連携が届く範囲で任せられます。届かない場所は、画面を見ながら一段ずつ一緒に進める形になります。",
+    note: "パスワードの入力だけは、必ず自分の手で。代行できるところと、人が触るところの線はここです。"
+  },
+  "private-light-read": {
+    place: "Gemini・Perplexity（出典つき調べ物）",
+    body: "軽い調べ物は、検索に強い道具が速い。Perplexityは出典が追いやすく、Gensparkも同系統。一次情報に当たる癖と相性がいい置き場です。",
+    note: "AIの答えは「当たりを付ける」まで。数字や固有名詞は一次情報で確かめる、あなたのいつもの流儀がそのまま効きます。"
+  },
+  "private-light-write": {
+    place: "Claude／画像が絡むならChatGPT",
+    body: "文章づくりはClaude、画像の生成や加工が絡む作業はChatGPT、と得意分野で分けるのが目安です。短い単発の作業ほど、この分担が効きます。",
+    note: "公開する作品には、AIが作った旨の開示を添えるのがこれまでの流儀。その一手間が信用になります。"
+  },
+  "private-light-operate": {
+    place: "ブラウザ操作できるAIエージェント（試せる領域）",
+    body: "公開前提の軽い作業なら、AIにブラウザを操作させる体験が現実になっています。候補は Muse、Claude in Chrome、ChatGPTのエージェント機能、Perplexity Comet、Geminiの Auto Browse、Edgeの Browse with Copilot（旧Copilot Actions、提供範囲は限定的）など。家のプロジェクトでこの感覚を先に味わっておくと、職場に公式の波が来たときに判断できる側にいられます。",
+    note: "試すのは自分の環境と公開情報の範囲で。操作代行は便利なぶん、実行前の一呼吸が大事です。"
+  }
+};
+
+var LABELS = {
+  scene: { work: "仕事", private: "私用" },
+  tier: { t1: "第1段階 一般情報", t2: "第2段階 業務情報", t3: "第3段階 個人情報", t4: "第4段階 取扱禁止情報" },
+  data: { heavy: "個人情報・実データ", mid: "作業の中身", light: "公開情報・一般論" },
+  act: { read: "読んでほしい", write: "書いてほしい", operate: "操作してほしい" }
+};
+
+var state = { scene: null, tier: null, data: null, act: null };
+var phase = "scene";
+var stack = [];
+var stage = document.getElementById("stage");
+var dots = document.getElementById("dots");
+
+function flowOrder() {
+  return state.scene === "work" ? ["scene", "tier", "act"] : ["scene", "data", "act"];
+}
+function stepIndex() {
+  return flowOrder().indexOf(phase);
+}
+
+function renderDots() {
+  var html = "";
+  var idx = stepIndex();
+  for (var i = 0; i < 3; i++) {
+    var cls = "dot";
+    if (i <= idx) { cls += (phase === "tier" ? " warn" : " on"); }
+    html += '<div class="' + cls + '"></div>';
+  }
+  dots.innerHTML = html;
+}
+
+function renderQuestion() {
+  renderDots();
+  var q = QUESTIONS[phase];
+  var order = flowOrder();
+  var numText = "質問 " + (order.indexOf(phase) + 1) + " / 3";
+  var html = '<div class="qnum' + (phase === "tier" ? " warn" : "") + '">' + numText + (phase === "tier" ? "（情報区分）" : "") + '</div>';
+  html += '<div class="qtitle">' + q.title + '</div>';
+  html += '<div class="qsub">' + q.sub + '</div>';
+  q.options.forEach(function(o) {
+    html += '<button class="opt' + (o.danger ? " danger" : "") + '" data-v="' + o.v + '"><b>' + o.b + '</b><span>' + o.s + '</span></button>';
+  });
+  if (stack.length > 0) {
+    html += '<button class="backbtn" id="back">← もどる</button>';
+  }
+  stage.innerHTML = html;
+  var btns = stage.querySelectorAll(".opt");
+  btns.forEach(function(btn) {
+    btn.addEventListener("click", function() { choose(btn.getAttribute("data-v")); });
+  });
+  var back = document.getElementById("back");
+  if (back) {
+    back.addEventListener("click", function() {
+      phase = stack.pop();
+      renderQuestion();
+    });
+  }
+}
+
+function choose(v) {
+  state[phase] = v;
+  stack.push(phase);
+  if (phase === "scene") {
+    phase = (v === "work") ? "tier" : "data";
+    renderQuestion();
+  } else if (phase === "tier") {
+    if (v === "t4") { renderBanned(); } else { phase = "act"; renderQuestion(); }
+  } else if (phase === "data") {
+    phase = "act";
+    renderQuestion();
+  } else if (phase === "act") {
+    renderResult();
+  }
+}
+
+function pathText() {
+  var t = "あなたの回答：場面＝" + LABELS.scene[state.scene];
+  if (state.scene === "work") { t += " ／ 段階＝" + LABELS.tier[state.tier]; }
+  if (state.data) { t += " ／ データ＝" + LABELS.data[state.data]; }
+  if (state.act) { t += " ／ 範囲＝" + LABELS.act[state.act]; }
+  return t;
+}
+
+function renderBanned() {
+  dots.innerHTML = "";
+  var html = '<div class="result-label warn">診断結果：入力禁止</div>';
+  html += '<div class="result-place warn">' + BANNED.place + '</div>';
+  html += '<div class="path">' + pathText() + '</div>';
+  html += '<div class="result-body">' + BANNED.body + '</div>';
+  html += '<div class="note warn"><b>判定ルール：</b>' + BANNED.note + '</div>';
+  html += '<button class="again" id="again">もう一度診断する</button>';
+  stage.innerHTML = html;
+  document.getElementById("again").addEventListener("click", restart);
+}
+
+function renderResult() {
+  dots.innerHTML = "";
+  var key = (state.scene === "work")
+    ? "w-" + state.tier + "-" + state.act
+    : "private-" + state.data + "-" + state.act;
+  var r = RESULTS[key];
+  var html = '<div class="result-label">診断結果：おすすめの置き場</div>';
+  html += '<div class="result-place">' + r.place + '</div>';
+  html += '<div class="path">' + pathText() + '</div>';
+  html += '<div class="result-body">' + r.body + '</div>';
+  html += '<div class="note"><b>線引きの注意：</b>' + r.note + '</div>';
+  html += '<button class="again" id="again">もう一度診断する</button>';
+  stage.innerHTML = html;
+  document.getElementById("again").addEventListener("click", restart);
+}
+
+function restart() {
+  state = { scene: null, tier: null, data: null, act: null };
+  phase = "scene";
+  stack = [];
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
