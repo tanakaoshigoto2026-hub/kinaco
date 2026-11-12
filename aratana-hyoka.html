@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>「新たな評価」早わかり</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Old+Mincho:wght@700;900&display=swap">
+<style>
+:root{
+  --paper:#ECEFF3; --surface:#FFFFFF; --ink:#18222D; --ink2:#4C5A69; --line:#C6CED8;
+  --ai:#1F4068; --on-ai:#FFFFFF; --ai-tint:#E2E9F2;
+  --k:#256B4A; --k-bg:#E1F0E8; --a:#2458A8; --a-bg:#E2EBF9; --g:#9A5416; --g-bg:#F8EAD8; --e:#5B5F6B; --e-bg:#E6E8EC;
+  --gold:#B98A14; --red:#A93636; --red-bg:#F7E3E3;
+  --mincho:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho","YuMincho",serif;
+  --gothic:"BIZ UDPGothic","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;
+  --tab-h:56px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#131A22; --surface:#1C2530; --ink:#E6EBF0; --ink2:#A5B1BE; --line:#36434F;
+    --ai:#9DBFE8; --on-ai:#10202F; --ai-tint:#24364A;
+    --k:#74C9A0; --k-bg:#1D3A2D; --a:#8FB5F2; --a-bg:#1E304E; --g:#E6AB6C; --g-bg:#43301B; --e:#B4BAC6; --e-bg:#2C3440;
+    --gold:#E3BA4E; --red:#E58B8B; --red-bg:#472424;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#131A22; --surface:#1C2530; --ink:#E6EBF0; --ink2:#A5B1BE; --line:#36434F;
+  --ai:#9DBFE8; --on-ai:#10202F; --ai-tint:#24364A;
+  --k:#74C9A0; --k-bg:#1D3A2D; --a:#8FB5F2; --a-bg:#1E304E; --g:#E6AB6C; --g-bg:#43301B; --e:#B4BAC6; --e-bg:#2C3440;
+  --gold:#E3BA4E; --red:#E58B8B; --red-bg:#472424;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:var(--gothic);font-size:16px;line-height:1.75;-webkit-text-size-adjust:100%}
+button,select{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--a)}
+:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+.top{padding:20px 0 12px}
+.top h1{font-family:var(--mincho);font-weight:900;font-size:clamp(26px,7vw,38px);line-height:1.25;margin:0;letter-spacing:.02em}
+.top p{margin:6px 0 0;color:var(--ink2);font-size:14px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0 0;padding:0;list-style:none;font-size:12.5px;color:var(--ink2)}
+.legend li{display:flex;align-items:center;gap:6px}
+
+.st{display:inline-block;flex:none;font-size:11.5px;font-weight:700;line-height:1;padding:4px 6px 3px;border:1.5px solid currentColor;border-radius:3px;white-space:nowrap;vertical-align:.1em}
+.st-k{color:var(--k);background:var(--k-bg)}
+.st-a{color:var(--a);background:var(--a-bg)}
+.st-g{color:var(--g);background:var(--g-bg)}
+.st-e{color:var(--e);background:var(--e-bg)}
+
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs ul{display:grid;grid-template-columns:repeat(6,1fr);margin:0 auto;padding:0;list-style:none;max-width:760px}
+.tabs button{width:100%;height:var(--tab-h);background:none;border:0;border-top:3px solid transparent;font-size:12px;font-weight:700;color:var(--ink2);padding:0 2px}
+.tabs button[aria-selected="true"]{color:var(--ai);border-top-color:var(--ai)}
+main{padding-bottom:calc(var(--tab-h) + 40px)}
+@media (min-width:800px){
+  .tabs{position:sticky;top:env(safe-area-inset-top,0px);bottom:auto;border-top:0;border-bottom:1px solid var(--line);padding-bottom:0}
+  .tabs button{font-size:14px;height:48px;border-top:0;border-bottom:3px solid transparent}
+  .tabs button[aria-selected="true"]{border-bottom-color:var(--ai)}
+  main{padding-bottom:40px}
+}
+
+section[hidden]{display:none}
+section{padding-top:20px}
+h2{font-family:var(--mincho);font-weight:700;font-size:22px;line-height:1.4;margin:0 0 4px}
+h3{font-size:16px;margin:0 0 6px;line-height:1.5}
+.lead{color:var(--ink2);font-size:14.5px;margin:0 0 16px;max-width:38em}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;margin:0 0 14px}
+.note{border-left:4px solid var(--g);background:var(--g-bg);padding:10px 12px;font-size:14px;margin:0 0 16px;border-radius:0 4px 4px 0}
+.small{font-size:13px;color:var(--ink2)}
+
+.facts{list-style:none;margin:0;padding:0}
+.facts li{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.facts li:first-child{border-top:0;padding-top:2px}
+.facts .src{grid-column:2}
+.src{font-size:12.5px;color:var(--ink2)}
+.src a{color:var(--ink2);text-underline-offset:2px}
+.term{background:none;border:0;padding:0;border-bottom:1.5px dotted var(--ai);color:inherit;font-weight:inherit;line-height:inherit}
+
+.bldg{display:block;width:100%;max-width:440px;margin:0 auto 6px;height:auto}
+.blk{cursor:pointer}
+.blk .shape{fill:var(--surface);stroke:var(--ink);stroke-width:1.6}
+.blk text{fill:var(--ink);font-family:var(--gothic);pointer-events:none}
+.blk .sm{font-size:11px;fill:var(--ink2)}
+.blk .lg{font-size:14.5px;font-weight:700}
+.blk.on .shape{fill:var(--ai)}
+.blk.on text,.blk.on .sm{fill:var(--on-ai)}
+.blk:focus-visible .shape{stroke:var(--a);stroke-width:3}
+.hint{text-align:center;font-size:13px;color:var(--ink2);margin:0 0 14px}
+.plain{margin:6px 0 10px;padding:0;list-style:none;font-size:14.5px}
+.plain li{display:grid;grid-template-columns:2.6em 1fr;padding:3px 0}
+.plain b{font-family:var(--mincho)}
+.levels{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.levels li{display:grid;grid-template-columns:4.6em 1fr;gap:10px;align-items:baseline;font-size:14.5px}
+.stars{color:var(--gold);font-size:17px;letter-spacing:.08em;white-space:nowrap}
+.zesei{color:var(--red);font-weight:700}
+
+.scroll{overflow-x:auto;margin:0 -4px;padding:0 4px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-top:1px solid var(--line)}
+thead th{border-top:0;font-size:13px;color:var(--ink2);white-space:nowrap}
+tbody th{font-weight:700;white-space:nowrap}
+td.neu{background:var(--ai-tint)}
+
+.q{padding:12px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0;padding-top:0}
+.q p{margin:0 0 8px;font-size:15px}
+.seg{display:inline-grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--ink2);border-radius:4px;overflow:hidden}
+.seg button{background:var(--surface);border:0;padding:8px 16px;font-size:14px;min-width:6.5em}
+.seg button+button{border-left:1.5px solid var(--ink2)}
+.seg button[aria-pressed="true"]{background:var(--ai);color:var(--on-ai);font-weight:700}
+.cb{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:start;padding:6px 0;font-size:15px}
+.cb input{width:20px;height:20px;margin:4px 0 0;accent-color:var(--ai)}
+.result{border:2px solid var(--ink);border-radius:6px;padding:16px;background:var(--surface);margin:0 0 14px}
+.result .big{font-family:var(--mincho);font-weight:900;font-size:28px;line-height:1.3;margin:0 0 4px}
+.result .big.stars{font-size:38px}
+.result p{margin:0 0 6px;font-size:14.5px}
+.result.bad{border-color:var(--red);background:var(--red-bg)}
+.result.bad .big{color:var(--red)}
+.result.wait{border-style:dashed;border-color:var(--line)}
+.result.wait .big{font-size:17px;font-family:var(--gothic);color:var(--ink2);margin:0}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{background:var(--surface);border:1.5px solid var(--ink2);border-radius:4px;padding:8px 14px;font-size:14px}
+.btn.main{background:var(--ai);border-color:var(--ai);color:var(--on-ai);font-weight:700}
+
+.field{display:block;margin:0 0 10px}
+.field>span{display:block;font-size:13px;color:var(--ink2);margin:0 0 3px}
+input[type=text],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:8px 10px}
+textarea{min-height:56px;resize:vertical}
+.self{display:inline-grid;grid-template-columns:repeat(3,48px);border:1.5px solid var(--ink2);border-radius:4px;overflow:hidden;margin:0 0 8px}
+.self button{background:var(--surface);border:0;height:38px;font-size:17px}
+.self button+button{border-left:1.5px solid var(--ink2)}
+.self button[aria-pressed="true"]{background:var(--ai);color:var(--on-ai)}
+details{border-top:1px solid var(--line)}
+details>summary{cursor:pointer;padding:10px 0;font-weight:700;font-size:15px;list-style-position:outside;margin-left:1.1em}
+.grp{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:0 16px;margin:0 0 10px}
+.grp>summary{font-family:var(--mincho);font-size:16.5px;padding:14px 0}
+.grp .cnt{font-family:var(--gothic);font-weight:400;font-size:13px;color:var(--ink2);margin-left:6px;white-space:nowrap}
+.std{font-size:13.5px;color:var(--ink2);margin:10px 0 0;padding:6px 10px;background:var(--paper);border-radius:4px}
+.item{padding:12px 0;border-top:1px solid var(--line)}
+.item>p{margin:0 0 8px;font-size:15px}
+.item details{border:0}
+.item details>summary{font-weight:400;font-size:13.5px;color:var(--ink2);padding:2px 0 6px}
+.item details ul{margin:0 0 8px;padding-left:1.2em;font-size:13.5px}
+.item details h4{margin:4px 0 2px;font-size:12.5px;color:var(--ink2)}
+.saved{font-size:13px;color:var(--ink2);min-height:1.6em;margin:6px 0 0}
+
+.tl{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid var(--ink)}
+.tl li{position:relative;padding:0 0 18px 16px}
+.tl li::before{content:"";position:absolute;left:-21px;top:.55em;width:12px;height:12px;background:var(--paper);border:2px solid var(--ink);border-radius:50%}
+.tl li.future::before{border-style:dashed}
+.tl time{display:block;font-family:var(--mincho);font-weight:700;font-size:17px;line-height:1.4}
+.tl p{margin:2px 0 0;font-size:15px}
+
+.issue h3{font-family:var(--mincho);font-size:18px;margin:0 0 10px}
+.duo{display:grid;gap:10px}
+@media (min-width:620px){.duo{grid-template-columns:1fr 1fr}}
+.duo div{padding:10px 12px;border-radius:4px;font-size:14.5px}
+.duo h4{margin:0 0 4px;font-size:13px}
+.con{background:var(--g-bg)} .con h4{color:var(--g)}
+.pro{background:var(--a-bg)} .pro h4{color:var(--a)}
+.issue .src{margin:8px 0 0;display:block}
+
+.prog{font-size:13px;color:var(--ink2);margin:0 0 8px}
+.kind{display:inline-block;font-size:12px;color:var(--ink2);border:1px solid var(--line);border-radius:3px;padding:1px 6px;margin:0 0 6px}
+.qz-q{font-size:16.5px;font-weight:700;margin:0 0 12px;line-height:1.6}
+.opts{display:grid;gap:8px;margin:0 0 12px}
+.opts button{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:4px;padding:10px 12px;font-size:15px;line-height:1.5}
+.opts button.right{border-color:var(--k);background:var(--k-bg)}
+.opts button.wrong{border-color:var(--red);background:var(--red-bg)}
+.opts button:disabled{cursor:default;color:var(--ink)}
+.fb{font-size:14.5px;margin:0 0 12px}
+.fb strong.ok{color:var(--k)} .fb strong.ng{color:var(--red)}
+.score{font-family:var(--mincho);font-weight:900;font-size:40px;line-height:1.2;margin:0}
+
+.sheet{position:fixed;left:8px;right:8px;bottom:calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 8px);z-index:30;background:var(--surface);border:2px solid var(--ai);border-radius:6px;padding:12px 14px;box-shadow:0 6px 24px rgba(10,20,35,.25);max-width:480px;margin:0 auto}
+.sheet h3{font-family:var(--mincho);margin:0 2em 4px 0}
+.sheet p{margin:0;font-size:14.5px}
+.sheet .x{position:absolute;top:6px;right:6px;width:36px;height:36px;background:none;border:0;font-size:20px;line-height:1}
+@media (min-width:800px){.sheet{left:auto;right:16px;bottom:16px;width:380px}}
+
+footer{color:var(--ink2);font-size:12.5px;padding:8px 0 24px}
+footer details>summary{font-size:13px;font-weight:700}
+footer ul{margin:0 0 10px;padding-left:1.2em}
+@media (prefers-reduced-motion:no-preference){
+  .result,.sheet{animation:pop .18s ease-out}
+  @keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>「新たな評価」早わかり</h1>
+    <p>認証評価に代わる、学部ごとの4段階評価。図と判定体験で仕組みをつかむ。</p>
+    <ul class="legend" aria-label="情報ステータスの凡例">
+      <li><span class="st st-k">確定</span>法令・既存の制度</li>
+      <li><span class="st st-a">案</span>中教審・文科省が示した案</li>
+      <li><span class="st st-g">議論中</span>異論・未整理・二次情報</li>
+      <li><span class="st st-e">推計</span>将来の見通し</li>
+    </ul>
+  </header>
+</div>
+
+<nav class="tabs" aria-label="学習メニュー"><ul id="tabs" role="tablist"></ul></nav>
+
+<main class="wrap">
+  <section id="v-map" role="tabpanel"></section>
+  <section id="v-judge" role="tabpanel" hidden></section>
+  <section id="v-check" role="tabpanel" hidden></section>
+  <section id="v-timeline" role="tabpanel" hidden></section>
+  <section id="v-issues" role="tabpanel" hidden></section>
+  <section id="v-quiz" role="tabpanel" hidden></section>
+
+  <footer>
+    <p>最終更新日：2026年11月12日（第2版）。内容は2026年11月時点の公開資料に基づく。制度は検討途中のため、最新の文部科学省資料を確認してください。</p>
+    <details><summary>更新履歴</summary><ul id="logList"></ul></details>
+    <details><summary>出典と確認日</summary><ul id="srcList"></ul></details>
+  </footer>
+</main>
+
+<div class="sheet" id="sheet" role="dialog" aria-live="polite" hidden>
+  <button class="x" id="sheetX" aria-label="用語の説明を閉じる">×</button>
+  <h3 id="sheetT"></h3><p id="sheetB"></p>
+</div>
+
+<script>
+/* ============================================================
+   コンテンツデータ：制度の続報が出たら、ここだけ差し替える
+   st: k=確定 / a=案 / g=議論中 / e=推計    src: SOURCES のキー
+   本文中の [[用語]] は GLOSSARY の説明が開く
+   ============================================================ */
+var CHECKED = '2026年11月12日';
+var CHANGELOG = [
+  {d:'2026年11月12日（第2版）',x:'ワーキンググループ「議論のまとめ」の原文を確認し、4段階の定義、機関全体の3基準、質保証の7基準・15項目を原文に合わせた。判定体験を点数のスライダーから、原文の観点を選ぶ形に変更。新旧対比表、15項目のチェック、複数学部の記録と比較、場面問題、間違えた問題の解き直しを追加。'},
+  {d:'2026年11月12日（初版）',x:'公開。'}
+];
+var SOURCES = {
+  s3:{t:'文科省 ワーキンググループ「議論のまとめ」（2026年6月3日）',kind:'一次',u:'https://www.mext.go.jp/content/20260602-mxtkoutou02-000050264_2.pdf'},
+  s1:{t:'文科省「新たな評価」制度の在り方について（案）（2026年5月）',kind:'一次',u:'https://www.mext.go.jp/content/20260519-mxt-koutou02-000049941_2.pdf'},
+  s2:{t:'文科省「新たな評価」の検討状況について（2026年2月）',kind:'一次',u:'https://www.mext.go.jp/content/20260303_mxt_senmon02-000046576_15.pdf'},
+  s9:{t:'文科省 質向上・質保証システム部会（第11回）配布資料',kind:'一次',u:'https://www.mext.go.jp/b_menu/shingi/chukyo/chukyo4/055/giji_list/1422801_00026.html'},
+  s11:{t:'文科省 認証評価制度の概要',kind:'一次',u:'https://www.mext.go.jp/b_menu/shingi/chukyo/chukyo4/003/gijiroku/04121001/004.htm'},
+  s4:{t:'リセマム 制度案の報道（2026年5月22日）',kind:'報道',u:'https://reseed.resemom.jp/article/2026/05/22/13296.html'},
+  s5:{t:'リセマム 公立大学協会の意見（2026年10月23日）',kind:'報道',u:'https://reseed.resemom.jp/article/2026/10/23/14423.html'},
+  s6:{t:'Between 文科省担当課長インタビュー（2026年7月）',kind:'報道',u:'https://between.shinken-ad.co.jp/detail/2026/07/hyoka1.html'},
+  s7:{t:'Between 認証評価制度の改革案・前編（2026年3月）',kind:'報道',u:'https://between.shinken-ad.co.jp/detail/2026/03/hyoka.html'},
+  s8:{t:'全私学新聞 第10回部会の報道（2026年7月3日）',kind:'報道',u:'https://www.zenshigaku-np.jp/2026/07/03/1631/'},
+  s12:{t:'カレッジマネジメント241号 特集「認証評価 第4期の重要ポイント」',kind:'報道',u:'https://souken.shingakunet.com/publication/college_m/2024_RCM241/2024_RCM241_043.pdf'},
+  s10:{t:'co-lect 部会（第9回）議事録の要約',kind:'二次的な要約',u:'https://co-lect.com/%E8%B3%AA%E5%90%91%E4%B8%8A%E3%83%BB%E8%B3%AA%E4%BF%9D%E8%A8%BC%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E9%83%A8%E4%BC%9A%EF%BC%88%E7%AC%AC9%E5%9B%9E%EF%BC%89%E8%AD%B0%E4%BA%8B%E9%8C%B2%E2%94%80%E2%94%80/'}
+};
+
+var GLOSSARY = {
+  '認証評価':'文部科学大臣の認証を受けた評価機関が、大学を定期的に評価する制度。2004年度に始まった。',
+  '内部質保証':'大学が自ら教育の質を点検・評価し、改善を続ける仕組み。認証評価はこれが機能しているかを確かめてきた。',
+  'DP':'ディプロマ・ポリシー（卒業認定・学位授与の方針）。卒業までに身に付ける資質・能力を示したもの。',
+  'CP':'カリキュラム・ポリシー（教育課程編成・実施の方針）。DPを達成するための教育課程の組み方を示したもの。',
+  'AP':'アドミッション・ポリシー（入学者受入れの方針）。入学段階で求める資質・能力と、その評価の考え方を示したもの。',
+  'アセスメントプラン':'学修成果を、いつ、何を使って、どう評価するかを定めた計画。',
+  '直接評価':'試験、成績、ルーブリック、eポートフォリオなど、学生の知識や能力の表れそのものから学修成果を測る方法。',
+  '間接評価':'全国学生調査、振り返りシートなど、学生本人の自己評価を通じて学修成果を捉える方法。',
+  '社会での活躍を示すデータ':'就職先への調査、卒業後調査、地域内就職率など、卒業生が社会や地域で貢献していることを示すもの。',
+  '全国学生調査':'文科省が実施する学生調査。2025年度から本格実施。新たな評価の趣旨に即した質問を設け、間接評価に活用するとされている。',
+  '学位プログラム':'学位を与えるために編成された教育課程のまとまり。1つの学部に複数あることもある。',
+  'ピア・レビュー':'同じ分野の専門家（他大学の教員など）が評価すること。',
+  '絶対評価':'ほかの学部との比較や順位ではなく、基準に照らして評価すること。',
+  '総合評価機関':'機関全体の評価と、学部等の段階別評価を総合的に担う評価機関。',
+  '特定分野評価機関':'医学など特定の分野を専門的に評価する機関。その評価結果で、総合評価機関による当該学部等の評価を代替できる。',
+  'データプラットフォーム':'評価に使うデータを、大学・評価機関・文科省が共有する仕組み。大学改革支援・学位授与機構に置き、評価結果もここで一元的に公表する。',
+  'Univ-map':'ユニマップ（仮称）。設置者別ではない新たな情報公表の基盤。評価結果もあわせて公表される。',
+  '質保証':'法令などで求められる教育活動の水準に達していること。',
+  '質向上':'学生一人ひとりの能力を最大限高めるために教育活動の水準を上げ、教育成果を明確に挙げること。'
+};
+
+/* 機関全体（一階）の3基準 */
+var INST = [
+  {t:'機関全体の社会的信頼',ex:'法令や社会的倫理に則った運営、必要な教員数、校地・校舎、情報公表など'},
+  {t:'全学的な内部質保証の手続と体制',ex:'内部質保証の方針・手続、体制図、手続規程'},
+  {t:'目指す方向性に向けた点検・評価と、それに基づく改善',ex:'中長期計画、定期的な自己点検、学部等への全学的な調整・支援'}
+];
+
+/* 質保証の視点：4方針・7基準・15項目（議論のまとめ 別添、4年制大学の学部を想定したモデル） */
+var POLICIES = [
+ {n:'Ⅰ',t:'明確な「養成する人材像」と「卒業認定・学位授与の方針」の策定・公表',stds:[
+  {t:'理念や社会・地域のニーズを踏まえ、明確な「養成する人材像」を適切に定め、社会に分かりやすく掲げている',items:[
+   {id:'I1a',t:'理念や社会・地域のニーズを踏まえ、明確な「養成する人材像」を適切に定め、示している',
+    ev:['理念と人材像を記した学則、ウェブサイトでの公表資料','産学連携協議会の議事録、外部評価委員会の報告書、自治体との連携協定書など','全国学生調査'],
+    ng:['学部等ごとの人材養成の目的を学則等に定めていない','人材像が社会・地域のニーズを踏まえている根拠を示せない']}]},
+  {t:'人材像に照らして必要で、学位にふさわしい資質・能力をDPで示している',items:[
+   {id:'I2a',t:'人材像に照らして必要で、学位にふさわしい資質・能力をDPで示している',
+    ev:['DPを示す学則、または公表資料'],
+    ng:['学位にふさわしい資質・能力をDPに掲げていない（分野別参照基準や学士力などを踏まえているかで確認される）']}]}
+ ]},
+ {n:'Ⅱ',t:'人材像とDPを達成するための教育課程・教育環境体制',stds:[
+  {t:'CPに則して、学生が体系的かつ主体的に学びを深められる教育課程を整備している',items:[
+   {id:'II1a',t:'DPと整合するCPを策定している',
+    ev:['CPを示す資料','DPとCPの関係を示す資料'],ng:['DPと整合するCPを策定していない']},
+   {id:'II1b',t:'CPとDPに基づき、学修成果を多面的に評価する考え方を策定している',
+    ev:['DPに基づくアセスメントプラン'],ng:['学修成果を多面的に評価する考え方を策定していない']},
+   {id:'II1c',t:'CPに則して教育課程を体系的に編成し、ふさわしい授業科目を開設している',
+    ev:['シラバス、履修要項','カリキュラムツリー、カリキュラムマップ','シラバスを確認する組織体制の資料','全国学生調査'],
+    ng:['人材像に対応した履修モデルを示していない','資格試験対策や就職対策に終始する科目を、卒業要件単位に算入している','授業時間外の学修を考慮せずに単位数を定めている']},
+   {id:'II1d',t:'授業を担当するにふさわしい教員と指導補助者を配置している',
+    ev:['教育研究組織の構成、教員選考の方針','教員データ（保有学位、研究業績、実務経験など）','授業科目の担当教員表'],
+    ng:['教員数が大学設置基準を満たしていない','教員の年齢構成が特定の範囲に著しく偏っている','教員と事務職員の役割分担・連携と、責任の所在が明確でない']},
+   {id:'II1e',t:'APを的確に定め、それを踏まえた入学者選抜方法を明確に示している',
+    ev:['APを示す資料','入学者選抜方法を示す資料'],
+    ng:['APに沿った選抜方法になっていない','人材像とAPの整合を説明していない']}]},
+  {t:'施設設備、学生支援体制など、教育環境・体制を整備している',items:[
+   {id:'II2a',t:'学修支援の方針に基づき、学修支援に必要な情報を学生に示している',
+    ev:['学修支援に関する基本方針','学修支援体制の組織図、関連規程','修学、進路選択、心身の健康の支援に関する公表資料','全国学生調査'],
+    ng:['社会的・職業的自立に関する指導に取り組んでおらず、体制もない','修学、進路選択、心身の健康の支援に関する情報を公表していない']},
+   {id:'II2b',t:'学修環境を整備し、必要な情報を学生に示している',
+    ev:['校地・校舎の面積、設置基準上必要な施設の整備状況','自主学習スペースの設置状況と活用状況','ICT利用の方針','教育環境の情報公表を示す資料'],
+    ng:['校地・校舎の面積が大学設置基準を満たしていない','教育環境に関する情報を公表していない','個別面談や、学生が休息・交流できるスペースが十分でない']}]}
+ ]},
+ {n:'Ⅲ',t:'学生の学修成果の適切な把握と評価',stds:[
+  {t:'DPに沿った厳格な学位授与のために、学修成果を適切に把握・評価している',items:[
+   {id:'III1a',t:'卒業認定の基準、判定方法、体制を明らかにしている',
+    ev:['卒業認定の基準、判定方法、体制を示す学則など'],
+    ng:['卒業認定の基準や判定方法・体制を明らかにしていない','124単位以上の修得など、法令上の卒業要件を満たしていない']},
+   {id:'III1b',t:'授業の単位認定を適切に行っている',
+    ev:['成績評価の基準・判定方法・体制と、その公表','科目ごとの成績分布、履修者数','単位認定を機関が確認した結果','異議申し立て制度など、評価の透明性を示す資料','全国学生調査'],
+    ng:['1年間の授業期間として35週を確保していない','成績評価基準に従った厳格な成績評価を行っていない']},
+   {id:'III1c',t:'卒業時のDP到達度を、多面的な方法で把握し、評価している',
+    ev:['DPの到達度を把握・評価していることを示す資料'],
+    ng:['DP到達度を把握するための、的確な直接評価と間接評価を実施していない','成績評価の基準を、学生にあらかじめ明示していない']}]},
+  {t:'在学中の学修成果を、「養成する人材像」につなげている',items:[
+   {id:'III2a',t:'DPの資質・能力を身に付けた学生を社会に輩出できていることを明らかにし、社会に示している',
+    ev:['卒業者数','就職率・進学率のデータ','卒業生や雇用先へのアンケート、ヒアリングの結果'],
+    ng:['卒業者数、進学者数、就職状況を把握しておらず、社会に示していない']}]}
+ ]},
+ {n:'Ⅳ',t:'学生の学びと成長の結果を基盤とした不断の自己改善',stds:[
+  {t:'学修成果の可視化で得た結果を、教育改善に活用している',items:[
+   {id:'IV1a',t:'教育改善のための体制を構築している',
+    ev:['教育改善の体制を示す規程、体制図','受審単位ごとの自己点検・評価報告書','授業改善の研修や、教職員の研修機会を示す資料'],
+    ng:['規程や体制はあるが、規程どおりに運用していない','規程どおりに運用しているが、客観的なデータを用いていない','授業の内容と方法を改善する組織的な研修の仕組みがない']},
+   {id:'IV1b',t:'様々なステークホルダーの意見を通じて定期的に点検・評価し、改善・向上を図っている',
+    ev:['学修成果の把握結果を教育改善に活かした自己点検・評価報告書','自己点検・評価に基づく改善計画','地域、産業界、教職員、学生から意見を聴いたことを示す資料'],
+    ng:['ステークホルダーの意見を聞いていない','自己点検・評価の結果に基づく改善・向上を行っていない']}]}
+ ]}
+];
+
+var LEVELS = [
+  {mark:'★★★',cls:'stars',t:'学生の成長につながる優れた取組を通じて、高い教育成果を挙げている学部等'},
+  {mark:'★★',cls:'stars',t:'学生の成長につながる優れた取組を通じて、高い教育成果が期待される学部等'},
+  {mark:'★',cls:'stars',t:'質保証の基準に達している学部等'},
+  {mark:'要是正',cls:'zesei',t:'求められる質保証の基準に達していない学部等'}
+];
+var TOP_VIEWS = [
+  '社会的・学術的に期待される水準をDPに掲げ、高い教育成果を挙げている',
+  'DPの達成に向けて、学生を入学時から大きく成長に導いている',
+  '教育成果が、単年度や個別の教職員の取組に依存せず、継続的かつ組織的である'
+];
+var GOOD_EX = [
+  '人材像を、産業界・自治体・卒業生との意見交換を通じて定期的に見直している',
+  'DPの資質・能力を、評価に耐える具体性のあるコンピテンシーとして定めている',
+  '直接評価と間接評価を組み合わせたアセスメントプランを策定し、実行している',
+  'DPと授業科目の対応を、学生に分かりやすく体系的に示している',
+  '支援が必要な学生を早期に把握し、個別相談や学習支援を行う体制がある',
+  '卒業生や雇用先の調査で、卒業後の活躍を詳しく把握している',
+  '内部質保証に学生が参画し、意見や提案を反映する体制がある'
+];
+
+var COMPARE = [
+  {k:'評価の単位',o:'機関全体。専門職大学院などは分野別の評価も受ける',n:'機関全体と、学部等ごと'},
+  {k:'見る中身',o:'内部質保証の仕組みが機能しているかが中心',n:'学部等の教育の質。質保証と質向上の2つの視点'},
+  {k:'結果の示し方',o:'適合・不適合。ほぼ全ての機関が適合',n:'学部等ごとに4段階。基準未達は「要是正」'},
+  {k:'評価の考え方',o:'基準に適合しているか否か',n:'絶対評価を基本とし、相対評価にはしない'},
+  {k:'周期',o:'機関別は7年以内、分野別は5年以内',n:'6年以内。要是正は6年を待たず再受審'},
+  {k:'担い手',o:'認証評価機関（16機関）',n:'総合評価機関と特定分野評価機関。21の学位分野ごとのピア・レビュー'},
+  {k:'評価基準',o:'評価機関ごとに大学評価基準を定める',n:'質保証の基準・項目は、全ての評価機関で同一にする'},
+  {k:'財務・経営',o:'評価の対象に含む',n:'既存の制度に委ね、教育と内部質保証に絞る'},
+  {k:'結果の公表',o:'評価機関ごとの報告書。項目や表現が異なる',n:'データプラットフォームで一元的に公表。検索や並べ替えができる'},
+  {k:'実地調査',o:'評価方法に含むことが必須',n:'評価機関が不要と判断すれば、対面を省ける'}
+];
+
+var BLOCKS = {
+  roof:{t:'4段階の結果',lead:'機関全体の評定に加えて、学部等ごとに段階別の結果が付きます。',items:[
+    {st:'a',x:'基準に達していない学部等は「要是正」。達している学部等は、優れた取組と教育成果に応じてより高く評価する。あわせて4段階。',src:['s3']},
+    {st:'a',x:'評語は、星のような記号の数など、高校生や企業にとって分かりやすいものにする。5月の制度案は「3つ星／2つ星／1つ星」を示した。最下段は5月案では「要改善」だったが、議論のまとめで「要是正」となった。',src:['s3','s4']},
+    {st:'a',x:'[[絶対評価]]を基本とし、相対評価にはしない。',src:['s3']},
+    {st:'a',x:'十分な成果を挙げられていない場合は、どこが不十分かを評価機関が明確に示すことが望ましい。',src:['s3']},
+    {st:'a',x:'結果は[[データプラットフォーム]]で一元的に公表し、所在地、授与される学位、人材像、DPなどの基本情報を付ける。[[Univ-map]]（仮称）でも公表する。',src:['s3']},
+    {st:'a',x:'評価結果を資源配分などの政策に活用することを検討する。良好な結果の機関には、受審期間の延長や評価項目の軽減を検討する。',src:['s3']}
+  ]},
+  hosho:{t:'質保証の視点',lead:'法令などで求められる教育活動の水準に達しているかを、厳格に判断します。',policies:true,items:[
+    {st:'a',x:'4つの方針の下に、7つの評価基準、15の評価項目がある。15項目は「チェック」の画面で確認できる。',src:['s3']},
+    {st:'a',x:'基準・項目を満たさない場合は「要是正」と判断する。',src:['s3']},
+    {st:'a',x:'法令で求められる水準が基準なので、評価機関が複数あっても、原則として同一の基準で評価する。',src:['s3']},
+    {st:'a',x:'提出書類は、自己点検評価書と根拠資料が基本。追加資料は、疑義がある場合などを除いて求めない。',src:['s3']},
+    {st:'a',x:'要是正の機関は、6年を待たず速やかに改善して再受審する。文科省は学部の新設などを認めない措置を講じ、改善が不十分なら学校教育法第15条の措置を含む是正措置をとる。',src:['s3']}
+  ]},
+  kojo:{t:'質向上の視点',lead:'教育活動を通じて、教育成果を明確に挙げているかを見ます。段階を分ける部分です。',items:[
+    {st:'a',x:'教育成果とは、DPに定める資質・能力を備えた学生を育成できていること。',src:['s3']},
+    {st:'a',x:'判断のポイントは2つ。1つ目は教育活動の取組状況（方針Ⅰ〜Ⅳの取組）。2つ目は教育成果を挙げていることの説明。',src:['s3']},
+    {st:'a',x:'教育成果を示す根拠の例は、[[直接評価]]の結果、[[間接評価]]の結果、[[社会での活躍を示すデータ]]。',src:['s3']},
+    {st:'a',x:'学修成果の可視化は、これまで間接評価が中心だった。第一義的には直接評価で行い、両方を組み合わせることが重要とされる。間接評価には[[全国学生調査]]を活用する。',src:['s3']},
+    {st:'a',x:'学部横断の教育や全学の教養教育は、各学部等のDPの達成と学生の成長にどう寄与しているかという観点で評価する。',src:['s3']},
+    {st:'a',x:'国際的な評価機関による評価や、教育プログラムの国際的な認証は、質向上の視点から評価する。',src:['s3']},
+    {st:'g',x:'段階の判定基準や教育成果の例は、評価機関の間で今後調整する。具体的な線引きは決まっていない。',src:['s3']}
+  ]},
+  f1:{t:'機関全体の評価',lead:'一階部分。3つの基準で、機関全体の質保証を確かめます。',inst:true,items:[
+    {st:'a',x:'3つの基準を十分満たしていないと判断された場合、学部等の評価は行わず、機関として自己改善が求められる。',src:['s3']},
+    {st:'a',x:'場合によっては学部等の評価の状況も加味するため、機関全体の評価と学部等の評価は、必要に応じて一体的に行う。',src:['s3']},
+    {st:'a',x:'財務・経営の観点は、国立大学法人評価や学校法人運営調査などの既存の制度に委ね、評価項目から外す。',src:['s3']},
+    {st:'k',x:'現行の[[認証評価]]は2004年度に開始。機関別は7年以内ごと、分野別は5年以内ごと。評価結果は、ほぼ全ての機関が「適合」。',src:['s3','s11']}
+  ]},
+  base:{t:'制度の枠組み',lead:'評価の単位、周期、担い手、導入時期です。',items:[
+    {st:'a',x:'現行の機関別認証評価と分野別認証評価を統合する。国立大学法人評価の教育に関する現況分析との重複も解消する。',src:['s3']},
+    {st:'a',x:'評価の単位は学部等。[[学位プログラム]]の状況も含めて確認するが、法令上の基本組織である学部等が教育成果を挙げているかに重きを置く。',src:['s3']},
+    {st:'a',x:'受審後、6年以内に次の受審を義務付けることを前提とする。',src:['s3']},
+    {st:'a',x:'担い手は[[総合評価機関]]と[[特定分野評価機関]]。同じ学位分野（21区分）での[[ピア・レビュー]]を基本とする。評価のばらつきをなくす調整組織を置く。',src:['s3']},
+    {st:'a',x:'産業界や高校の関係者の参画を促す。学生代表の参画も今後検討する。',src:['s3']},
+    {st:'a',x:'2030年度頃の導入を見込む。実施までに、試行的な評価を含む準備を行う。',src:['s6','s3']},
+    {st:'g',x:'大学院の評価は大学院部会で検討中。法科大学院は別の委員会で検討する。',src:['s3']},
+    {st:'g',x:'法改正を含む準備が進められている。',src:['s5']}
+  ]}
+};
+
+var TIMELINE = [
+  {d:'2004年度',st:'k',x:'認証評価制度が始まる。',src:['s3']},
+  {d:'2025年2月',st:'k',x:'中教審「知の総和」答申が、認証評価の抜本的な見直しを提起。',src:['s3']},
+  {d:'2025年度',st:'k',x:'現行制度の第4期が始まる。5月には新たな評価のワーキンググループが検討を開始。',src:['s12','s7']},
+  {d:'2026年2月16日',st:'a',x:'ワーキンググループが検討状況を整理。二階建ての構造と4方針が示される。',src:['s2']},
+  {d:'2026年5月21日',st:'a',x:'ワーキンググループ第11回で制度案を公表。学部ごとの4段階評価が示される。',src:['s4','s1']},
+  {d:'2026年6月3日',st:'a',x:'ワーキンググループが「議論のまとめ」を取りまとめる。7基準・15項目と判断例を別添で示す。',src:['s3']},
+  {d:'2026年6月29日',st:'g',x:'質向上・質保証システム部会（第10回）が、要是正となった機関への対応フローを審議。',src:['s8']},
+  {d:'2026年8月25日',st:'g',x:'同部会（第11回）が、質保証システムの担保、新たなデータプラットフォームでの情報公表、教学マネジメント指針を議論。',src:['s9']},
+  {d:'2026年10月20日',st:'g',x:'公立大学協会が、文科省へ意見と提案を提出。',src:['s5']},
+  {d:'2030年度頃',st:'a',x:'「新たな評価」導入の見込み。',src:['s6'],future:true},
+  {d:'2035〜2040年度',st:'e',x:'18歳人口は2034年度まで約100万人を保ち、2040年度までの6年間で約74万人まで急減する見込み。大学進学者は約63万人（2024年）から約46万人へ。',src:['s3'],future:true}
+];
+
+var ISSUES = [
+  {t:'4段階は序列づけにならないか',
+   con:'公立大学協会は、4段階が大学間・学部間の単純な優劣ではなく、質保証・質向上の取組みの進展状況を示すものとなるよう求めている。',
+   pro:'相対評価ではなく絶対評価を基本とする。公表の際は、各機関の個性・特色と多様性が明らかになるよう配慮する。知名度では測れない、地方の機関の教育を伝える狙いがある。',src:['s5','s3']},
+  {t:'取組みと成果を同じ物差しで測れるか',
+   con:'公立大学協会は、教育活動の取組状況（プロセス）と教育成果（アウトカム）を同一尺度で加算せず、独立して扱うことを提案。質保証、取組状況、教育成果の順に評価し、4段階を段階的に付与する案を示した。',
+   pro:'議論のまとめは、判断のポイントとして取組状況と教育成果の2つを挙げる。両者をどう組み合わせて段階を決めるかは、今後の調整に委ねられている。',src:['s5','s3']},
+  {t:'学部単位で大学の特色を捉えられるか',
+   con:'全学で行う学部横断的な取組みや、大学固有の特色が十分に捉えられないという懸念。評価単位は学位プログラムにすべきという意見もある。',
+   pro:'学部横断の教育は、各学部等のDPの達成への寄与という観点で評価する。学位プログラムの状況も含めて確認する。機関全体は一階部分で確かめる。',src:['s5','s3']},
+  {t:'評価者は足りるのか',
+   con:'評価対象は学部約2,640、年間約400件という数字が部会で示され、評価者の供給見込みや待遇が整理されていないとの指摘がある（二次的な要約による）。',
+   pro:'21の学位分野ごとのピア・レビューを基本とする。文科省は評価者の確保策の支援を検討する。データプラットフォームの自動計算やAIの活用で、評価者と大学の負担を減らす。',src:['s10','s3']},
+  {t:'入学時の学力が高い大学が有利にならないか',
+   con:'入学時の学力が高い学生を集める大学が有利になるのではないか、という声がある。',
+   pro:'入学後にどの程度成長させたかという付加価値こそが教育の質だとする。規模や地域性にかかわらず、丁寧に教育する機関が高く評価されるべきとしている。定員充足率で不適合にすることは考えていないとの説明もあった。',src:['s6','s3','s8']},
+  {t:'資源配分との連動は、萎縮を生まないか',
+   con:'星の評価や資源配分との連動が、挑戦的な教育を避ける萎縮につながるおそれがあるとの指摘（二次的な要約による）。',
+   pro:'評価結果を資源配分などに活用し、改善努力を後押しする。良好な結果の機関には、受審期間の延長や評価項目の軽減を検討する。',src:['s10','s3']},
+  {t:'評価が画一的にならないか',
+   con:'段階別の評価によって、大学の多様性が損なわれるのではないかという懸念。',
+   pro:'DPこそが多様性を表すという立場。その分、各機関はDPが具体的で、学修成果を可視化できるものになっているかを再検証すべきとされる。',src:['s6','s3']},
+  {t:'評価の負担は本当に減るのか',
+   con:'現行の認証評価には、大学側・評価機関側の双方に徒労感があるとの指摘が多い。学部等ごとの評価で、負担が増える心配もある。',
+   pro:'評価項目を教育の質に必要なものに絞る。機関別と分野別を統合し、国立大学法人評価との重複を解消する。提出は自己点検評価書と根拠資料を基本とする。',src:['s3']},
+  {t:'要是正となったあと、どうなるのか',
+   con:'学生が集まらない学部をやめて新しい学部を作ることが難しくならないか、との確認が委員から出た。',
+   pro:'要是正の機関には学部の新設などを認めない。募集停止は認めるが、改編するなら適合の評価を取るべきとの説明。6年を待たずに改善して再受審することが求められる。',src:['s8','s3']}
+];
+
+/* クイズ：kind k=知識 s=場面。o[0] が正解（出題時に並べ替える） */
+var QUIZ = [
+  {kind:'k',q:'「新たな評価」で、学部等ごとに示される評価結果は何段階ですか。',o:['4段階','2段階','3段階','5段階'],
+   e:'要是正と、基準に達した学部等の3段階をあわせた4段階です。現行制度は適合・不適合の判定で、ほぼ全ての機関が適合となっています。',st:'a',src:'s3'},
+  {kind:'k',q:'段階別評価の単位はどれですか。',o:['学部等','大学全体','学位プログラム','教員個人'],
+   e:'学部等です。学位プログラムの状況も含めて確認しますが、法令上の基本組織である学部等に重きを置きます。',st:'a',src:'s3'},
+  {kind:'k',q:'新制度では、受審後何年以内に次の受審が義務付けられる前提ですか。',o:['6年以内','5年以内','7年以内','10年以内'],
+   e:'6年以内です。現行制度は、機関別が7年以内、分野別が5年以内です。',st:'a',src:'s3'},
+  {kind:'k',q:'「質保証の視点」の構成はどれですか。',o:['4方針・7基準・15項目','3方針・10基準・30項目','7方針・4基準・15項目','10基準のみ'],
+   e:'4つの基本的な方針の下に、7つの評価基準と15の評価項目があります。',st:'a',src:'s3'},
+  {kind:'k',q:'段階別評価の基本的な考え方はどれですか。',o:['絶対評価','相対評価','同じ分野の中での順位づけ','偏差値方式'],
+   e:'絶対評価を基本とします。各機関が自負を得て、さらに高みを目指す自己改革につなげるためとされています。',st:'a',src:'s3'},
+  {kind:'k',q:'「質向上の視点」の判断のポイント2つはどれですか。',o:['教育活動の取組状況と、教育成果','入学者の学力と、就職率','研究業績と、外部資金の獲得額','定員充足率と、財務状況'],
+   e:'方針Ⅰ〜Ⅳを踏まえた教育活動の取組状況と、教育成果を挙げていることの説明です。',st:'a',src:'s3'},
+  {kind:'k',q:'教育成果を示す根拠の例として、挙げられていないものはどれですか。',o:['入学者の偏差値','直接評価の結果','間接評価の結果','社会での活躍を示すデータ'],
+   e:'根拠の例は、直接評価の結果、間接評価の結果、社会での活躍を示すデータの3つです。入学時の学力ではなく、入学後の成長を見ます。',st:'a',src:'s3'},
+  {kind:'k',q:'機関全体の評価項目から外し、既存の制度に委ねるとされたものはどれですか。',o:['財務・経営','内部質保証の体制','機関の社会的信頼','点検・評価に基づく改善'],
+   e:'財務・経営は、国立大学法人評価や学校法人運営調査などの既存の制度で対応するとされました。',st:'a',src:'s3'},
+  {kind:'k',q:'新制度の導入が見込まれている時期はいつですか。',o:['2030年度頃','2027年度頃','2028年度頃','2035年度頃'],
+   e:'2030年度頃です。現行制度の第4期（2025年度開始）の途中での切り替えになります。',st:'a',src:'s6'},
+  {kind:'k',q:'評価結果は、どこで公表されることになっていますか。',o:['データプラットフォームで一元的に公表','各大学のウェブサイトのみ','評価機関ごとの報告書のみ','公表しない'],
+   e:'大学改革支援・学位授与機構に置くデータプラットフォームで、一元的に公表します。検索や並べ替えができるようにします。',st:'a',src:'s3'},
+  {kind:'k',q:'公立大学協会の提案の要点はどれですか。',o:['プロセスとアウトカムを同一尺度で加算せず、独立して扱う','評価を3段階に減らす','評価単位を学位プログラムにする','新制度の導入を見送る'],
+   e:'教育活動の取組状況（プロセス）と教育成果（アウトカム）を独立して扱い、4段階を段階的に付与することを提案しました。',st:'g',src:'s5'},
+  {kind:'k',q:'学部等の評価は、どの単位のピア・レビューを基本としますか。',o:['同じ学位の分野','同じ都道府県','同じ設置者（国立・公立・私立）','同じ規模の大学'],
+   e:'同じ学位の分野（21区分）でのピア・レビューを基本とします。分野横断型の学部は、複数分野の専門家が協働して評価します。',st:'a',src:'s3'},
+  {kind:'s',q:'ある学部は、資格試験対策に終始する科目を、卒業要件の単位に算入しています。どう扱われますか。',o:['質保証の視点で、基準を満たさない判断例に当たる','問題にならない','質向上の視点で評価が下がるだけ','機関全体の評価で扱われる'],
+   e:'方針Ⅱの評価項目「教育課程を体系的に編成し、ふさわしい授業科目を開設している」の判断例に当たります。卒業要件に算入しない科目として開講することは可能です。',st:'a',src:'s3'},
+  {kind:'s',q:'ある学部は、DPの到達度を、学生アンケートだけで把握しています。どう扱われますか。',o:['的確な直接評価と間接評価を実施していない、という判断例に当たる','間接評価があるので十分','質向上の視点で加点される','評価の対象外'],
+   e:'方針Ⅲの評価項目は、DP到達度を多面的な方法で把握することを求めています。学修成果の可視化は、第一義的には直接評価で行うとされています。',st:'a',src:'s3'},
+  {kind:'s',q:'ある学部は高い教育成果を挙げていますが、特定の教員1人の取組に支えられています。最上位の評価の観点から見ると、どうですか。',o:['継続的かつ組織的であるという観点を満たさない','成果が高いので最上位に当たる','要是正になる','機関全体の評価で減点される'],
+   e:'最上位の評価では、教育成果が単年度や個別の教職員の取組に依存せず、継続的かつ組織的であることが観点の1つです。',st:'a',src:'s3'},
+  {kind:'s',q:'機関全体の評価で、全学的な内部質保証の体制が整っていないと判断されました。学部等の評価はどうなりますか。',o:['学部等の評価は行わず、機関として自己改善が求められる','学部等の評価は通常どおり行う','全学部が自動的に星1になる','学部等の評価だけを先に行う'],
+   e:'機関全体の3基準を十分満たしていないと判断された場合、学部等の評価は行われません。',st:'a',src:'s3'},
+  {kind:'s',q:'ある学部は定員割れが続いていますが、質保証の15項目は満たしています。どう扱われますか。',o:['定員充足率だけで要是正にはならない','自動的に要是正になる','星の数が1つ減る','評価を受けられない'],
+   e:'15項目に定員充足率は含まれていません。文科省は部会で、定員充足率によって不適合にすることは考えていないと説明しました。',st:'a',src:'s8'},
+  {kind:'s',q:'ある学部は、教育改善の規程と体制を整え、規程どおりに運用しています。ただし、客観的なデータは使っていません。どう扱われますか。',o:['基準を満たさない判断例に当たる','規程どおりなので問題ない','質向上の視点で加点される','次回の評価まで保留される'],
+   e:'方針Ⅳの評価項目「教育改善のための体制を構築している」の判断例に、客観的なデータを用いて運用していない場合が挙がっています。',st:'a',src:'s3'},
+  {kind:'s',q:'ある学部が「要是正」と評価されました。その後の対応として、示されているものはどれですか。',o:['6年を待たず、速やかに改善して再受審する','次の6年後の評価まで待つ','評価結果は公表されない','他の学部の結果で相殺できる'],
+   e:'可及的速やかに改善して再受審することが求められます。その間、文科省は学部の新設などを認めない措置を講じるとされています。',st:'a',src:'s3'}
+];
+var QUIZ_ROUND = {k:6, s:4};
+
+var TABS = [
+  {id:'map',label:'全体像'},{id:'judge',label:'判定'},{id:'check',label:'チェック'},
+  {id:'timeline',label:'年表'},{id:'issues',label:'論点'},{id:'quiz',label:'クイズ'}
+];
+
+/* ============================================================
+   共通の部品
+   ============================================================ */
+var ST = {k:'確定',a:'案',g:'議論中',e:'推計'};
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function rich(s){return esc(s).replace(/\[\[(.+?)\]\]/g,function(m,k){return '<button type="button" class="term" data-term="'+k+'">'+k+'</button>';});}
+function badge(st){return '<span class="st st-'+st+'">'+ST[st]+'</span>';}
+function srcLinks(keys){
+  if(!keys||!keys.length) return '';
+  return '<span class="src">出典：'+keys.map(function(k){var s=SOURCES[k];return '<a href="'+s.u+'" target="_blank" rel="noopener">'+esc(s.t)+'</a>';}).join('、')+'</span>';
+}
+function factList(items){
+  return '<ul class="facts">'+items.map(function(i){return '<li>'+badge(i.st)+'<span>'+rich(i.x)+'</span>'+srcLinks(i.src)+'</li>';}).join('')+'</ul>';
+}
+function load(key,fallback){try{var v=localStorage.getItem(key);return v?JSON.parse(v):fallback;}catch(e){return fallback;}}
+function save(key,val){try{localStorage.setItem(key,JSON.stringify(val));return true;}catch(e){return false;}}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function allItems(){var r=[];POLICIES.forEach(function(p,pi){p.stds.forEach(function(s,si){s.items.forEach(function(it){r.push({p:p,pi:pi,si:si,it:it});});});});return r;}
+
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.term');
+  if(t){e.preventDefault();var k=t.getAttribute('data-term');$('sheetT').textContent=k;$('sheetB').textContent=GLOSSARY[k]||'';$('sheet').hidden=false;return;}
+  if(e.target.id==='sheetX'||!e.target.closest('#sheet')) $('sheet').hidden=true;
+});
+
+/* ============================================================
+   1. 全体像
+   ============================================================ */
+var curBlock='roof';
+function blk(id,shape,text){return '<g class="blk" data-b="'+id+'" tabindex="0" role="button" aria-label="'+BLOCKS[id].t+'の解説を開く">'+shape+text+'</g>';}
+function renderMap(){
+  var svg='<svg class="bldg" viewBox="0 0 360 318" role="group" aria-label="二階建て評価の図。各部分を選ぶと解説が開きます">'
+  +blk('roof','<polygon class="shape" points="22,98 180,18 338,98"/>','<text class="sm" x="180" y="62" text-anchor="middle">結果</text><text class="lg" x="180" y="84" text-anchor="middle">学部等ごとに4段階</text>')
+  +blk('hosho','<rect class="shape" x="40" y="102" width="140" height="88"/>','<text class="sm" x="110" y="128" text-anchor="middle">二階・学部等ごと</text><text class="lg" x="110" y="152" text-anchor="middle">質保証の視点</text><text class="sm" x="110" y="172" text-anchor="middle">15項目を満たすか</text>')
+  +blk('kojo','<rect class="shape" x="180" y="102" width="140" height="88"/>','<text class="sm" x="250" y="128" text-anchor="middle">二階・学部等ごと</text><text class="lg" x="250" y="152" text-anchor="middle">質向上の視点</text><text class="sm" x="250" y="172" text-anchor="middle">教育成果を挙げたか</text>')
+  +blk('f1','<rect class="shape" x="40" y="194" width="280" height="70"/>','<text class="sm" x="180" y="220" text-anchor="middle">一階・機関全体</text><text class="lg" x="180" y="244" text-anchor="middle">機関全体の評価（3基準）</text>')
+  +blk('base','<rect class="shape" x="14" y="268" width="332" height="40"/>','<text class="lg" x="180" y="293" text-anchor="middle" style="font-size:13px">制度の枠組み（単位・周期・担い手・時期）</text>')
+  +'</svg>';
+  $('v-map').innerHTML='<h2>二階建ての全体像</h2>'
+   +'<p class="lead">'+rich('一階で機関全体を確かめ、二階で学部等ごとの教育の質を見る。現行の[[認証評価]]との一番の違いは、二階ができたことです。')+'</p>'
+   +svg+'<p class="hint">図の各部分を押すと、下に解説が出ます</p>'
+   +'<div class="panel" id="blkPanel" aria-live="polite"></div>'
+   +'<div class="panel"><h3>4段階の定義　'+badge('a')+'</h3><ul class="levels">'
+   +LEVELS.map(function(l){return '<li><span class="'+l.cls+'">'+l.mark+'</span><span>'+esc(l.t)+'</span></li>';}).join('')
+   +'</ul><p class="small" style="margin:10px 0 0">定義の文言は議論のまとめによる。評語は「星のような記号の数など」とされており、星の数との対応は5月の制度案に基づく。'+srcLinks(['s3','s4'])+'</p></div>'
+   +'<div class="panel"><h3>現行制度との違い</h3><div class="scroll"><table><thead><tr><th></th><th>現行の認証評価　'+badge('k')+'</th><th>新たな評価　'+badge('a')+'</th></tr></thead><tbody>'
+   +COMPARE.map(function(c){return '<tr><th scope="row">'+esc(c.k)+'</th><td>'+esc(c.o)+'</td><td class="neu">'+esc(c.n)+'</td></tr>';}).join('')
+   +'</tbody></table></div><p class="small" style="margin:10px 0 0">'+srcLinks(['s3'])+'</p></div>';
+  showBlock(curBlock);
+  var gs=$('v-map').querySelectorAll('.blk');
+  for(var i=0;i<gs.length;i++){(function(g){
+    g.addEventListener('click',function(){showBlock(g.getAttribute('data-b'));});
+    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();showBlock(g.getAttribute('data-b'));}});
+  })(gs[i]);}
+}
+function showBlock(id){
+  curBlock=id;var b=BLOCKS[id];
+  var gs=document.querySelectorAll('.blk');
+  for(var i=0;i<gs.length;i++){gs[i].classList.toggle('on',gs[i].getAttribute('data-b')===id);}
+  var h='<h3>'+esc(b.t)+'</h3><p class="lead" style="margin-bottom:10px">'+esc(b.lead)+'</p>';
+  if(b.policies){h+='<ul class="plain">'+POLICIES.map(function(p){var n=0;p.stds.forEach(function(s){n+=s.items.length;});return '<li><b>'+p.n+'</b><span>'+esc(p.t)+'<span class="small">（'+p.stds.length+'基準・'+n+'項目）</span></span></li>';}).join('')+'</ul>';}
+  if(b.inst){h+='<ul class="plain">'+INST.map(function(x,i){return '<li><b>'+(i+1)+'</b><span>'+esc(x.t)+'</span></li>';}).join('')+'</ul>';}
+  h+=factList(b.items);
+  $('blkPanel').innerHTML=h;
+}
+
+/* ============================================================
+   2. 判定体験（議論のまとめの文言をもとにした流れ）
+   ============================================================ */
+function newSim(){return {g:[null,null,null],p:[null,null,null,null],q1:null,c:[false,false,false]};}
+var sim=newSim();
+function seg(key,val,yes,no){
+  return '<div class="seg" role="group"><button type="button" data-k="'+key+'" data-v="1" aria-pressed="'+(val===true)+'">'+yes+'</button><button type="button" data-k="'+key+'" data-v="0" aria-pressed="'+(val===false)+'">'+no+'</button></div>';
+}
+function renderJudge(){
+  var h='<h2>4段階の判定を体験する</h2>'
+   +'<p class="note"><strong>判定の流れを理解するための整理です。</strong>議論のまとめの文言に沿っていますが、段階の判定基準は今後調整するとされており、実際の線引きは決まっていません。</p>'
+   +'<div class="panel"><h3>一階：機関全体の3基準</h3>'
+   +INST.map(function(x,i){return '<div class="q"><p><b>'+(i+1)+'</b>　'+esc(x.t)+'<br><span class="small">'+esc(x.ex)+'</span></p>'+seg('g'+i,sim.g[i],'満たす','満たさない')+'</div>';}).join('')
+   +'</div>'
+   +'<div class="panel"><h3>二階：質保証の4方針</h3><p class="small" style="margin:0 0 10px">各方針の評価項目を、すべて満たしているかで答えてください。項目は「チェック」の画面にあります。</p>'
+   +POLICIES.map(function(p,i){var n=0;p.stds.forEach(function(s){n+=s.items.length;});return '<div class="q"><p><b>'+p.n+'</b>　'+esc(p.t)+'<span class="small">（'+n+'項目）</span></p>'+seg('p'+i,sim.p[i],'満たす','満たさない')+'</div>';}).join('')
+   +'</div><div id="simUp"></div><div id="simResult" aria-live="polite"></div>'
+   +'<div class="row"><button class="btn" id="simAll">ここまでをすべて「満たす」にする</button><button class="btn" id="simReset">最初からやり直す</button></div>';
+  $('v-judge').innerHTML=h;
+  drawSim();
+}
+function drawSim(){
+  var passed=sim.g.every(function(x){return x===true;})&&sim.p.every(function(x){return x===true;});
+  var up=$('simUp');
+  if(passed){
+    var h='<div class="panel"><h3>二階：質向上の視点</h3>'
+     +'<div class="q"><p>方針Ⅰ〜Ⅳを踏まえた、学生の成長につながる優れた取組がありますか。</p>'+seg('q1',sim.q1,'ある','ない')
+     +'<details style="border:0;margin-top:6px"><summary style="font-weight:400;font-size:13.5px;color:var(--ink2);padding:2px 0">優れた取組の例を見る</summary><ul style="margin:4px 0 0;padding-left:1.2em;font-size:13.5px">'+GOOD_EX.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></details></div>';
+    if(sim.q1===true){
+      h+='<div class="q"><p>高い教育成果を挙げていると言える観点に、印を付けてください。</p>'
+       +TOP_VIEWS.map(function(x,i){return '<label class="cb"><input type="checkbox" data-c="'+i+'"'+(sim.c[i]?' checked':'')+'><span>'+esc(x)+'</span></label>';}).join('')
+       +'<p class="small" style="margin-top:6px">'+rich('成果の根拠には、[[直接評価]]の結果、[[間接評価]]の結果、[[社会での活躍を示すデータ]]を使います。')+'</p></div>';
+    }
+    up.innerHTML=h+'</div>';
+  }else{up.innerHTML='';}
+  drawResult();
+}
+function drawResult(){
+  var h,rest=sim.g.filter(function(x){return x===null;}).length+sim.p.filter(function(x){return x===null;}).length;
+  if(sim.g.some(function(x){return x===false;})){
+    h='<div class="result bad"><p class="big">要是正（機関全体）</p><p>'+badge('a')+'　機関全体の基準を十分満たしていないと判断された場合、学部等の評価は行われません。機関として自己改善が求められます。</p></div>';
+  }else if(sim.p.some(function(x){return x===false;})){
+    var ng=POLICIES.filter(function(p,i){return sim.p[i]===false;}).map(function(p){return p.n;}).join('・');
+    h='<div class="result bad"><p class="big">要是正</p><p>'+badge('a')+'　方針'+ng+'で、質保証の基準に達していません。6年を待たずに改善して再受審することが求められ、その間は学部の新設などが認められません。</p></div>';
+  }else if(rest>0){
+    h='<div class="result wait"><p class="big">残り'+rest+'項目に答えると、次に進みます</p></div>';
+  }else if(sim.q1===null){
+    h='<div class="result wait"><p class="big">質保証の基準には達しています。優れた取組の有無に答えると、段階が出ます</p></div>';
+  }else{
+    var n,miss=[];
+    if(sim.q1===false) n=1;
+    else{TOP_VIEWS.forEach(function(x,i){if(!sim.c[i]) miss.push(x);});n=miss.length?2:3;}
+    var def=LEVELS[3-n].t;
+    h='<div class="result"><p class="big stars" aria-label="星'+n+'に当たる段階">'+'★★★'.slice(0,n)+'</p><p><strong>'+esc(def)+'</strong></p>';
+    if(n===1) h+='<p>求められる水準は満たしています。次の段階には、学生の成長につながる優れた取組が要ります。</p>';
+    if(n===2) h+='<p>優れた取組はあり、高い教育成果が期待される段階です。最上位に届いていない観点は次のとおりです。</p><ul style="margin:0 0 6px;padding-left:1.2em;font-size:14.5px">'+miss.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul><p class="small">実際の評価でも、どこが不十分かを評価機関が示すことが望ましいとされています。</p>';
+    if(n===3) h+='<p>3つの観点をすべて満たし、高い教育成果を挙げている段階です。</p>';
+    h+='<p class="small">'+badge('a')+'　段階の定義は議論のまとめによる。星の数との対応は5月の制度案に基づく。</p></div>';
+  }
+  $('simResult').innerHTML=h;
+}
+function bindJudge(){
+  var v=$('v-judge');
+  v.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b||b.classList.contains('term')) return;
+    if(b.id==='simAll'){sim.g=[true,true,true];sim.p=[true,true,true,true];renderJudge();return;}
+    if(b.id==='simReset'){sim=newSim();renderJudge();return;}
+    var k=b.getAttribute('data-k');if(!k) return;
+    var val=b.getAttribute('data-v')==='1';
+    if(k==='q1') sim.q1=val; else sim[k.charAt(0)][+k.slice(1)]=val;
+    var sib=b.parentNode.querySelectorAll('button');
+    for(var i=0;i<sib.length;i++){sib[i].setAttribute('aria-pressed',String(sib[i]===b));}
+    drawSim();
+  });
+  v.addEventListener('change',function(e){
+    var c=e.target.getAttribute&&e.target.getAttribute('data-c');
+    if(c!==null&&c!==undefined){sim.c[+c]=e.target.checked;drawResult();}
+  });
+}
+
+/* ============================================================
+   3. チェック（15項目、複数学部）
+   ============================================================ */
+var CK='hyoka-check-v2';
+function blankDept(name){return {name:name||'',items:{}};}
+var chk=(function(){
+  var v2=load(CK,null);
+  if(v2&&v2.depts&&v2.depts.length) return v2;
+  var d=blankDept('');
+  var v1=load('hyoka-check-v1',null);
+  if(v1&&v1.items){
+    d.name=v1.dept||'';
+    POLICIES.forEach(function(p,i){var o=v1.items[i]||{};var id=p.stds[0].items[0].id;
+      var memo=[o.now,o.evid].filter(function(x){return x;}).join('\n');
+      if(memo||o.self) d.items[id]={self:o.self||'',memo:memo};});
+  }
+  return {cur:0,depts:[d]};
+})();
+if(!(chk.cur>=0&&chk.cur<chk.depts.length)) chk.cur=0;
+var saveTimer=null,clearArmed=false;
+function curDept(){return chk.depts[chk.cur];}
+function deptLabel(d,i){return d.name||('学部'+(i+1)+'（名称未記入）');}
+function tally(d,pi){
+  var r={'○':0,'△':0,'×':0,n:0};
+  allItems().forEach(function(x){if(pi===undefined||x.pi===pi){r.n++;var s=(d.items[x.it.id]||{}).self;if(s) r[s]++;}});
+  return r;
+}
+function tallyText(t){return '○'+t['○']+'　△'+t['△']+'　×'+t['×']+'　未判定'+(t.n-t['○']-t['△']-t['×']);}
+function renderCheck(){
+  var d=curDept();
+  var h='<h2>自分の学部で確かめる</h2>'
+   +'<p class="lead">質保証の15項目を、学部ごとに自己判定します。記入内容はこの端末のブラウザに保存され、他の人には見えません。</p>'
+   +'<div class="panel"><label class="field"><span>記録する学部</span><select id="ckSel">'
+   +chk.depts.map(function(x,i){return '<option value="'+i+'"'+(i===chk.cur?' selected':'')+'>'+esc(deptLabel(x,i))+'</option>';}).join('')
+   +'</select></label><label class="field"><span>この学部の名称</span><input type="text" id="ckName" placeholder="例：経済学部" value="'+esc(d.name)+'"></label>'
+   +'<div class="row"><button class="btn" id="ckAdd">学部を追加</button>'+(chk.depts.length>1?'<button class="btn" id="ckDel">この学部の記録を削除</button>':'')+'</div>'
+   +'<p class="small" id="ckTally" style="margin:10px 0 0"></p></div>';
+  POLICIES.forEach(function(p,pi){
+    h+='<details class="grp"'+(pi===0?' open':'')+'><summary>'+p.n+'　'+esc(p.t)+'<span class="cnt" id="cnt'+pi+'"></span></summary>';
+    p.stds.forEach(function(s,si){
+      h+='<p class="std">評価基準'+'①②'.charAt(si)+'　'+esc(s.t)+'</p>';
+      s.items.forEach(function(it,ii){var o=d.items[it.id]||{};
+        h+='<div class="item"><p><b>'+'abcde'.charAt(ii)+'</b>　'+esc(it.t)+'</p>'
+         +'<div class="self" role="group" aria-label="自己判定">'
+         +['○','△','×'].map(function(m){return '<button type="button" data-id="'+it.id+'" data-m="'+m+'" aria-pressed="'+(o.self===m)+'" aria-label="'+({'○':'できている','△':'一部できている','×':'できていない'})[m]+'">'+m+'</button>';}).join('')
+         +'</div><details><summary>根拠資料の例と、基準を満たさない判断例</summary><h4>根拠資料の例</h4><ul>'+it.ev.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul><h4>基準を満たさないと判断される例</h4><ul>'+it.ng.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></details>'
+         +'<textarea data-id="'+it.id+'" placeholder="現状と根拠資料のメモ" aria-label="現状と根拠資料のメモ">'+esc(o.memo||'')+'</textarea></div>';
+      });
+    });
+    h+='</details>';
+  });
+  h+='<p class="small">'+badge('a')+'　項目、根拠資料の例、判断例は、議論のまとめの別添（4年制大学の学部を想定したモデル）を要約したもの。判断例は一部を抜粋。'+srcLinks(['s3'])+'</p>'
+   +'<div id="ckCompare"></div>'
+   +'<div class="row"><button class="btn main" id="ckCopy">この学部の記入内容をテキストでコピー</button><button class="btn" id="ckClear">この学部の記入内容を消す</button></div>'
+   +'<p class="saved" id="ckMsg" aria-live="polite"></p>'
+   +'<textarea id="ckOut" readonly hidden style="margin-top:8px;min-height:160px" aria-label="コピー用のテキスト"></textarea>';
+  $('v-check').innerHTML=h;
+  drawTally();
+}
+function drawTally(){
+  var d=curDept();
+  $('ckTally').textContent='15項目の自己判定：'+tallyText(tally(d));
+  POLICIES.forEach(function(p,pi){var t=tally(d,pi);$('cnt'+pi).textContent=(t['○']+t['△']+t['×'])+' / '+t.n+' 項目を判定';});
+  var box=$('ckCompare');
+  if(chk.depts.length<2){box.innerHTML='';return;}
+  box.innerHTML='<div class="panel"><h3>学部ごとの比較</h3><div class="scroll"><table><thead><tr><th>学部</th>'+POLICIES.map(function(p){return '<th>方針'+p.n+'</th>';}).join('')+'</tr></thead><tbody>'
+   +chk.depts.map(function(x,i){return '<tr><th scope="row">'+esc(deptLabel(x,i))+'</th>'+POLICIES.map(function(p,pi){var t=tally(x,pi);return '<td>○'+t['○']+' △'+t['△']+' ×'+t['×']+'</td>';}).join('')+'</tr>';}).join('')
+   +'</tbody></table></div><p class="small" style="margin:8px 0 0">×が1つでもある方針は、質保証の視点で基準に達しないおそれがあります。</p></div>';
+}
+function queueSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){var m=$('ckMsg');if(m) m.textContent=save(CK,chk)?'保存しました。':'この環境では保存できません。コピーして控えてください。';},500);
+}
+function checkText(){
+  var d=curDept();
+  var t='「新たな評価」質保証15項目の自己判定\n対象の学部：'+(d.name||'（未記入）')+'\n集計：'+tallyText(tally(d))+'\n';
+  POLICIES.forEach(function(p){
+    t+='\n【方針'+p.n+'】'+p.t+'\n';
+    p.stds.forEach(function(s,si){s.items.forEach(function(it,ii){var o=d.items[it.id]||{};
+      t+='　'+'①②'.charAt(si)+'abcde'.charAt(ii)+'　['+(o.self||'未')+']　'+it.t+'\n'+(o.memo?'　　メモ：'+o.memo.replace(/\n/g,'\n　　')+'\n':'');});});
+  });
+  return t;
+}
+function copyCheck(){
+  var t=checkText(),msg=$('ckMsg'),out=$('ckOut');
+  function fallback(){out.hidden=false;out.value=t;out.focus();out.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+    msg.textContent=ok?'コピーしました。':'下の欄を選択してコピーしてください。';}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){msg.textContent='コピーしました。';},fallback);}
+  else fallback();
+}
+function bindCheck(){
+  var v=$('v-check');
+  v.addEventListener('input',function(e){
+    var t=e.target,d=curDept();
+    if(t.id==='ckName'){d.name=t.value;var op=$('ckSel').options[chk.cur];if(op) op.textContent=deptLabel(d,chk.cur);drawTally();}
+    else if(t.tagName==='TEXTAREA'&&t.dataset.id){(d.items[t.dataset.id]=d.items[t.dataset.id]||{}).memo=t.value;}
+    else return;
+    queueSave();
+  });
+  v.addEventListener('change',function(e){
+    if(e.target.id==='ckSel'){chk.cur=+e.target.value;save(CK,chk);renderCheck();}
+  });
+  v.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b) return;
+    var d=curDept();
+    if(b.dataset.m){
+      var o=d.items[b.dataset.id]=d.items[b.dataset.id]||{};
+      o.self=(o.self===b.dataset.m)?'':b.dataset.m;
+      var sib=b.parentNode.querySelectorAll('button');
+      for(var j=0;j<sib.length;j++){sib[j].setAttribute('aria-pressed',String(sib[j].dataset.m===o.self));}
+      drawTally();queueSave();
+    }else if(b.id==='ckAdd'){chk.depts.push(blankDept(''));chk.cur=chk.depts.length-1;save(CK,chk);renderCheck();$('ckName').focus();}
+    else if(b.id==='ckCopy'){copyCheck();}
+    else if(b.id==='ckClear'||b.id==='ckDel'){
+      if(!clearArmed||clearArmed!==b.id){clearArmed=b.id;var old=b.textContent;b.textContent='もう一度押すと実行します';setTimeout(function(){clearArmed=false;if($(b.id)) $(b.id).textContent=old;},4000);}
+      else{clearArmed=false;
+        if(b.id==='ckDel'){chk.depts.splice(chk.cur,1);chk.cur=0;}else{d.items={};}
+        save(CK,chk);renderCheck();$('ckMsg').textContent=(b.id==='ckDel')?'学部の記録を削除しました。':'記入内容を消しました。';}
+    }
+  });
+}
+
+/* ============================================================
+   4. 年表　5. 論点
+   ============================================================ */
+function renderTimeline(){
+  $('v-timeline').innerHTML='<h2>これまでとこれから</h2><p class="lead">2004年に始まった認証評価が、2030年度頃に切り替わる見込みです。点線の丸は、これから先の予定です。</p>'
+   +'<ol class="tl">'+TIMELINE.map(function(t){return '<li'+(t.future?' class="future"':'')+'><time>'+esc(t.d)+'　'+badge(t.st)+'</time><p>'+rich(t.x)+'</p>'+srcLinks(t.src)+'</li>';}).join('')+'</ol>'
+   +'<div class="panel">'+badge('g')+'　今後は、法改正を含む準備と、試行的な評価が進む見通しです。答申や省令の続報が出たら、内容が変わる可能性があります。</div>';
+}
+function renderIssues(){
+  $('v-issues').innerHTML='<h2>議論になっている点</h2><p class="lead">論点ごとに、懸念と制度側の説明を並べています。いずれも制度設計が終わっていない部分です。</p>'
+   +ISSUES.map(function(i){return '<div class="panel issue"><h3>'+esc(i.t)+'　'+badge('g')+'</h3><div class="duo"><div class="con"><h4>懸念・批判</h4>'+esc(i.con)+'</div><div class="pro"><h4>制度側の狙い・説明</h4>'+esc(i.pro)+'</div></div>'+srcLinks(i.src)+'</div>';}).join('');
+}
+
+/* ============================================================
+   6. クイズ（毎回10問を選び、並べ替えて出題。間違えた問題は解き直せる）
+   ============================================================ */
+var QK='hyoka-quiz-v2';
+var qz={set:[],i:0,score:0,wrong:[],answered:false,full:true,best:load(QK,{best:null}).best};
+function pickRound(){
+  var k=shuffle(QUIZ.filter(function(q){return q.kind==='k';})).slice(0,QUIZ_ROUND.k);
+  var s=shuffle(QUIZ.filter(function(q){return q.kind==='s';})).slice(0,QUIZ_ROUND.s);
+  return shuffle(k.concat(s));
+}
+function startQuiz(set,full){qz.set=set;qz.i=0;qz.score=0;qz.wrong=[];qz.answered=false;qz.full=full;renderQuiz();}
+function renderQuiz(){
+  var v=$('v-quiz'),total=qz.set.length;
+  if(qz.i>=total){
+    var newBest=false;
+    if(qz.full&&(qz.best===null||qz.score>qz.best)){qz.best=qz.score;save(QK,{best:qz.best});newBest=true;}
+    var msg=qz.score===total?'全問正解です。':(qz.score>=total*0.7?'骨格は押さえられています。間違えた問題を解き直すと定着します。':'「全体像」と「チェック」を見直してから、もう一度解いてみてください。');
+    v.innerHTML='<h2>確認クイズ</h2><div class="panel"><p class="score">'+qz.score+' / '+total+' 問正解</p><p>'+msg+'</p>'
+     +(qz.best!==null?'<p class="small">10問での最高は'+qz.best+'問'+(newBest?'（今回更新）':'')+'</p>':'')
+     +'<div class="row" style="margin-top:12px">'+(qz.wrong.length?'<button class="btn main" id="qzRetry">間違えた'+qz.wrong.length+'問を解き直す</button>':'')
+     +'<button class="btn'+(qz.wrong.length?'':' main')+'" id="qzAgain">新しい10問を解く</button></div></div>';
+    if(qz.wrong.length) $('qzRetry').addEventListener('click',function(){startQuiz(shuffle(qz.wrong),false);});
+    $('qzAgain').addEventListener('click',function(){startQuiz(pickRound(),true);});
+    return;
+  }
+  var q=qz.set[qz.i],order=shuffle([0,1,2,3]);
+  v.innerHTML='<h2>確認クイズ</h2><p class="prog">'+(qz.i+1)+'問目 / 全'+total+'問'+(qz.full?'':'（解き直し）')+(qz.best!==null?'　10問での最高は'+qz.best+'問':'')+'</p>'
+   +'<div class="panel"><span class="kind">'+(q.kind==='s'?'場面で考える':'知識を確かめる')+'</span><p class="qz-q">'+esc(q.q)+'</p><div class="opts">'
+   +order.map(function(oi){return '<button type="button" data-o="'+oi+'">'+esc(q.o[oi])+'</button>';}).join('')
+   +'</div><div id="qzFb" aria-live="polite"></div></div>';
+  var bs=v.querySelectorAll('.opts button');
+  for(var i=0;i<bs.length;i++){bs[i].addEventListener('click',function(){
+    if(qz.answered) return;qz.answered=true;
+    var pick=+this.getAttribute('data-o'),ok=pick===0;if(ok) qz.score++; else qz.wrong.push(q);
+    for(var j=0;j<bs.length;j++){var oj=+bs[j].getAttribute('data-o');bs[j].disabled=true;if(oj===0) bs[j].classList.add('right');else if(oj===pick) bs[j].classList.add('wrong');}
+    $('qzFb').innerHTML='<p class="fb"><strong class="'+(ok?'ok':'ng')+'">'+(ok?'正解です。':'不正解です。')+'</strong>'+esc(q.e)+'<br>'+badge(q.st)+'　'+srcLinks([q.src])+'</p>'
+     +'<button class="btn main" id="qzNext">'+(qz.i+1<total?'次の問題へ':'結果を見る')+'</button>';
+    $('qzNext').addEventListener('click',function(){qz.i++;qz.answered=false;renderQuiz();});
+    $('qzNext').focus();
+  });}
+}
+
+/* ============================================================
+   タブ切り替え（ハッシュで各画面に直接リンクできる）
+   ============================================================ */
+function show(id){
+  if(!TABS.some(function(t){return t.id===id;})) id='map';
+  TABS.forEach(function(t){
+    $('v-'+t.id).hidden=(t.id!==id);
+    $('t-'+t.id).setAttribute('aria-selected',String(t.id===id));
+  });
+  $('sheet').hidden=true;
+  try{window.scrollTo(0,0);}catch(e){}
+}
+function init(){
+  $('tabs').innerHTML=TABS.map(function(t){return '<li role="presentation"><button type="button" role="tab" id="t-'+t.id+'" aria-controls="v-'+t.id+'" aria-selected="false">'+t.label+'</button></li>';}).join('');
+  TABS.forEach(function(t){$('t-'+t.id).addEventListener('click',function(){
+    try{location.hash=t.id;}catch(e){}
+    show(t.id);
+  });});
+  $('logList').innerHTML=CHANGELOG.map(function(c){return '<li><strong>'+esc(c.d)+'</strong>　'+esc(c.x)+'</li>';}).join('');
+  $('srcList').innerHTML=Object.keys(SOURCES).map(function(k){var s=SOURCES[k];return '<li>['+esc(s.kind)+'] <a href="'+s.u+'" target="_blank" rel="noopener">'+esc(s.t)+'</a>　確認日：'+CHECKED+'</li>';}).join('');
+  renderMap();bindJudge();renderJudge();bindCheck();renderCheck();renderTimeline();renderIssues();startQuiz(pickRound(),true);
+  window.addEventListener('hashchange',function(){show(location.hash.replace('#',''));});
+  show(location.hash.replace('#',''));
+}
+init();
+</script>
+</body>
+</html>
